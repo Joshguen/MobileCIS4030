@@ -1,17 +1,25 @@
+import java.util.ArrayList;
 /**
  * ReceiptItems contain the information of items that can be found on a receipt
  * @param name A String depicting the name of the item
- * @param price An Int depicting how much the item is sold for
- * @param quantity An Int depicting the number of the item were sold
+ * @param price A Double depicting how much the item is sold for
  */
 public class ReceiptItem {
     public String name; 
-    public int price; 
-    public int quantity; 
+    public double price; 
+    public ArrayList<User> claims = new ArrayList<User>();
 
-    public ReceiptItem(String name, int price, int quantity) {
+    //Constructor
+    public ReceiptItem(String name, double price) {
         this.name = name;
         this.price = price;
-        this.quantity = quantity;
+    }
+
+    public void addClaim(User user) {
+        claims.add(user);
+    }
+
+    public void removeClaim(User user) {
+        claims.remove(user);
     }
 };
