@@ -1,5 +1,4 @@
-public class User
-{
+public class User{
     public String name; 
     public int ID; 
     public Receipt claimedItems = new Receipt();
