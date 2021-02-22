@@ -13,6 +13,8 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.io.*;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -30,6 +32,12 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+        ReceiptItem testItem1 = new ReceiptItem("penis", 1000);
+        ReceiptItem testItem2 = new ReceiptItem("dildo", 100);
+        Receipt testReceipt1 = new Receipt();
+        testReceipt1.addItem(testItem1);
+        testReceipt1.addItem(testItem2);
+        System.out.println(testReceipt1.getTotal());
     }
 
     @Override
