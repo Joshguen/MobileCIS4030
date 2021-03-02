@@ -8,10 +8,12 @@ import com.google.android.material.snackbar.Snackbar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.util.Log;
 import android.view.View;
 
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 
 import java.io.*;
 
@@ -28,16 +30,15 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Log.d("andrewversion","Fuck this shit im out!");
             }
         });
-        ReceiptItem testItem1 = new ReceiptItem("penis", 1000);
-        ReceiptItem testItem2 = new ReceiptItem("dildo", 100);
-        Receipt testReceipt1 = new Receipt();
-        testReceipt1.addItem(testItem1);
-        testReceipt1.addItem(testItem2);
-        System.out.println(testReceipt1.getTotal());
+
+        /*Button button_first;
+        button_first = (Button) findViewById(R.id.button_first);
+        button_first.setOnClickListener((v) -> {
+            Log.d("andrewversion","Fuck this shit im out!");
+        });*/
     }
 
     @Override
@@ -56,9 +57,11 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Log.d("andrewversion","testing");
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
+
 }
