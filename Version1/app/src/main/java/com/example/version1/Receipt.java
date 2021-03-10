@@ -1,5 +1,7 @@
 package com.example.version1;
 
+import com.example.version1.ReceiptItem;
+
 import java.util.ArrayList;
 
 public class Receipt {
@@ -13,9 +15,13 @@ public class Receipt {
         items.remove(item);
     }
 
+    public int getLength() {
+        return (items.size());
+    }
+
     public ReceiptItem searchItem(String name, double price) {
         for (int i = 0; i < items.size(); i++) {
-            if (items.get(i).name == name && items.get(i).price ==price) {
+            if (items.get(i).name.equals(name) && items.get(i).price == price) {
                 return items.get(i);
             }
         }
