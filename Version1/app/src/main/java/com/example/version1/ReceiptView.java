@@ -35,6 +35,8 @@ public class ReceiptView extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.receipt_view);
 
+        Button doneButton = findViewById(R.id.done_button);
+
         TextView babyGotBack = (TextView) findViewById(R.id.back_text);
         ListView listOfReceiptItems = (ListView) findViewById(R.id.receipt);
 
@@ -44,6 +46,10 @@ public class ReceiptView extends AppCompatActivity {
         Receipt testReceipt1 = new Receipt();
         testReceipt1.addItem(testItem1);
         testReceipt1.addItem(testItem2);
+
+        Receipt userReceipt = new Receipt();
+
+        double runningTot = 0;
 
         ArrayList<String> items = new ArrayList<String>();
         for (ReceiptItem item : testReceipt1.items) {
@@ -59,14 +65,24 @@ public class ReceiptView extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String receiptItem = (String) parent.getItemAtPosition(position);
-                System.out.println("you got; " + receiptItem);
-                Toast.makeText(getApplicationContext(), "Clicked on Row: " + receiptItem, Toast.LENGTH_LONG).show();
+                System.out.println("you got; " + position);
+                if(listOfReceiptItems.isItemChecked(position)){
+                    userReceipt.addItem(testReceipt1.items.get(position));
+                //    Toast.makeText(getApplicationContext(), "Running total: " + userReceipt.getTotal(), Toast.LENGTH_SHORT).show();
+                }else{
+                    userReceipt.removeItem(testReceipt1.items.get(position));
+                }
+                TextView runningTotal = findViewById(R.id.running_total);
+                runningTotal.setText("Total: $" + String.valueOf(userReceipt.getTotal()));
             }
         });
 
         babyGotBack.setOnClickListener(v -> {
-            System.out.println();
-            Toast.makeText(getApplicationContext(), "Total: " + testReceipt1.getTotal(), Toast.LENGTH_LONG).show();
+            finish();
+        });
+
+        doneButton.setOnClickListener(v -> {
+            //TODO
             finish();
         });
     }
