@@ -34,7 +34,6 @@
             android:layout_width="122dp"
             android:layout_height="65dp"
             android:layout_centerInParent="true"
-            android:onClick="sendMessage"
             android:text="@string/button_text"
             app:backgroundTint="#9C27B0"
             app:iconTint="#2B2B2B"
@@ -44,7 +43,14 @@
             android:id="@+id/capture_image_btn"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:text="capture image"/>
+            android:text="capture image"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textId"
+            />
 
     </RelativeLayout>
 
