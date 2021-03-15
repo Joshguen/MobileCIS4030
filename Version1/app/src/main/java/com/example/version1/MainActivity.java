@@ -7,6 +7,7 @@ import android.Manifest;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -14,7 +15,18 @@ import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.ml.vision.FirebaseVision;
+import com.google.firebase.ml.vision.common.FirebaseVisionImage;
+import com.google.firebase.ml.vision.text.FirebaseVisionText;
+import com.google.firebase.ml.vision.text.FirebaseVisionTextRecognizer;
+
+import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,6 +38,8 @@ public class MainActivity extends AppCompatActivity {
 
     Uri image_uri;
 
+    TextView parsedText;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,6 +47,10 @@ public class MainActivity extends AppCompatActivity {
 
         Button testBut;
         testBut = (Button) findViewById(R.id.test_button);
+        mImageView = findViewById(R.id.image_view);
+        mCaptureBtn = findViewById(R.id.capture_image_btn);
+
+        parsedText = findViewById(R.id.textId);
 
         com.example.version1.ReceiptItem testItem1 = new com.example.version1.ReceiptItem("penis", 1000);
         com.example.version1.ReceiptItem testItem2 = new com.example.version1.ReceiptItem("dildo", 100);
@@ -45,8 +63,7 @@ public class MainActivity extends AppCompatActivity {
             openReceipt();
         });
 
-        mImageView = findViewById(R.id.image_view);
-        mCaptureBtn = findViewById(R.id.capture_image_btn);
+
         mCaptureBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -70,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
     }
 
     private void openCamera() {
@@ -110,11 +128,48 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         //called when image was captured from camera
-
         super.onActivityResult(requestCode, resultCode, data);
+
         if (resultCode == RESULT_OK) {
             //set the image captured to our ImageView
             mImageView.setImageURI(image_uri);
+
+//            Bundle bundle = data.getExtras();
+//            //from bundle, extract the image
+//            Bitmap bitmap = (Bitmap) bundle.get("data");
+
+            Bitmap bitmap = null;
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), image_uri);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            //Parsing using Firebase
+            //Make a FirebaseVisionTextRecognizer from FirebaseVision, from FirebaseVisionImage, from Bitmap, from Bundle
+            FirebaseVisionImage firebaseVisionImage = FirebaseVisionImage.fromBitmap(bitmap);
+            FirebaseVision firebaseVision = FirebaseVision.getInstance();
+            FirebaseVisionTextRecognizer firebaseVisionTextRecognizer = firebaseVision.getCloudTextRecognizer();
+
+            //Making task to process
+            Task<FirebaseVisionText> task = firebaseVisionTextRecognizer.processImage(firebaseVisionImage);
+
+            task.addOnSuccessListener(new OnSuccessListener<FirebaseVisionText>() {
+                @Override
+                public void onSuccess(FirebaseVisionText firebaseVisionText) {
+                    String s = firebaseVisionText.getText();
+                    parsedText.setText(s);
+                }
+            });
+
+            task.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            });
+
         }
     }
+
 }
