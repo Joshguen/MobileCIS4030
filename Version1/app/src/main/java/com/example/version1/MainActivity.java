@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -12,6 +13,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -27,6 +29,7 @@ import com.google.firebase.ml.vision.text.FirebaseVisionText;
 import com.google.firebase.ml.vision.text.FirebaseVisionTextRecognizer;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -45,23 +48,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button testBut;
-        testBut = (Button) findViewById(R.id.test_button);
         mImageView = findViewById(R.id.image_view);
         mCaptureBtn = findViewById(R.id.capture_image_btn);
 
-        parsedText = findViewById(R.id.textId);
-
-        com.example.version1.ReceiptItem testItem1 = new com.example.version1.ReceiptItem("penis", 1000);
-        com.example.version1.ReceiptItem testItem2 = new com.example.version1.ReceiptItem("dildo", 100);
         com.example.version1.Receipt testReceipt1 = new com.example.version1.Receipt();
-        testReceipt1.addItem(testItem1);
-        testReceipt1.addItem(testItem2);
-
-        testBut.setOnClickListener(v -> {
-            System.out.println(testReceipt1.getTotal());
-            openReceipt();
-        });
 
 
         mCaptureBtn.setOnClickListener(new View.OnClickListener() {
@@ -158,7 +148,12 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess(FirebaseVisionText firebaseVisionText) {
                     String s = firebaseVisionText.getText();
-                    parsedText.setText(s);
+                    String[] lines = s.split("\\n");
+
+                    Intent intent = new Intent(MainActivity.this, ReceiptView.class);
+                    intent.putExtra("lines",lines);
+                    startActivity(intent);
+                    //parsedText.setText(s);
                 }
             });
 
