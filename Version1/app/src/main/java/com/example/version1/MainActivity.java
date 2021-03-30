@@ -29,6 +29,7 @@ import com.google.firebase.ml.vision.text.FirebaseVisionText;
 import com.google.firebase.ml.vision.text.FirebaseVisionTextRecognizer;
 
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
@@ -148,6 +149,10 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess(FirebaseVisionText firebaseVisionText) {
                     String s = firebaseVisionText.getText();
+
+                    writeToFile(s, getApplicationContext());
+
+
                     String[] lines = s.split("\\n");
 
                     Intent intent = new Intent(MainActivity.this, ReceiptView.class);
@@ -164,6 +169,17 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
 
+        }
+    }
+
+    private void writeToFile(String data,Context context) {
+        try {
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput("rawData.txt", Context.MODE_PRIVATE));
+            outputStreamWriter.write(data);
+            outputStreamWriter.close();
+        }
+        catch (IOException e) {
+            Log.e("Exception", "File write failed: " + e.toString());
         }
     }
 

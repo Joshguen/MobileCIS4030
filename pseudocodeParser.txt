@@ -1,0 +1,86 @@
+
+Queue q;
+ArrayList<ReceiptItem> items;
+int count = 0;
+
+Float runningTotal = 0;
+Float receiptTotal = 0;
+
+main{
+	String[] s;
+	String ret;
+
+	for (String line : s){
+		ret = parseLine(line);
+		
+		if(ret != null){	//Not garbage line, or item
+			items[count] = ret;
+			count++;
+			runningTotal += ret.price;
+		}
+
+	}
+	
+	if(receiptTotal != runningTotal){
+		//error check
+	}
+}
+
+//didn't parse much, cuz 
+bool garbageCheck(String s){
+	if(s.contains("Zehrs") ||
+		s.contains("ZEHRS") ||
+		s.equals("TM") || 
+		//s.contains("(519) 763-7995") ||
+		s.contains("Welcome #") ||
+		s.equals("HMRJ") ||
+		s.equals("MRJ") ||
+		s.equals("RQ") ||
+		//s.contains('-') || 	//if contains dash, unsure if universal
+		(toInt(s) > 1000 && !s.contains('.')) ||	//product number on left of item
+		//s[0] == ('(') ||
+		//s.contains("SUBTOTAL") ||
+		
+		
+		
+		){
+		return true;
+	}
+	return false;
+
+}
+
+bool itemsCheck(String s){
+// Item names come before or at the same as price
+// Multipacks will have 2-3 lines saying the same thing
+}
+
+
+ReceiptItem parseLine(String s){
+	
+	bool b;
+	
+	b = garbageCheck(s);	
+	if(b){
+		return null;
+	}
+
+	//Use queue to match price w name
+	b = itemsCheck(s);
+	if(b){
+		push(s, q);
+		return null;
+	}
+	
+	b = priceCheck(s);
+	if(b){
+		String name = pop(q);
+		Float price = atofloat(s);	//floatify
+		
+		ReceiptItem r;
+		r.name = name;
+		r.price = price;
+		return r;
+	}
+
+}
