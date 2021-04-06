@@ -30,7 +30,10 @@ import com.google.firebase.ml.vision.text.FirebaseVisionTextRecognizer;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.lang.*;
 import java.util.Arrays;
+
+import static java.sql.DriverManager.println;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -51,6 +54,9 @@ public class MainActivity extends AppCompatActivity {
 
         mImageView = findViewById(R.id.image_view);
         mCaptureBtn = findViewById(R.id.capture_image_btn);
+
+        extractText("0391230safds PENIS PUMP Iguana Iguana DON BUTTsecks BILLY'S DICK HMRJ10.01");
+        extractPrice("123123123123123BUTTS MRJ506.69");
 
         com.example.version1.Receipt testReceipt1 = new com.example.version1.Receipt();
 
@@ -170,6 +176,38 @@ public class MainActivity extends AppCompatActivity {
             });
 
         }
+    }
+
+    private String extractText(String s){
+        String rtn = "";
+        //splitting the string to extra all caps characters
+        String[] substrings = s.split("[^A-Z]+");
+        for (String str : substrings) {
+            if(!str.isEmpty()){
+                //appending to create new string
+                rtn = rtn+str;
+            }
+        }
+        Log.d("MyApp",rtn);
+        return rtn;
+    }
+
+    private String extractPrice(String s){
+        String rtn = "";
+        //replace all non "." and numeric characters with space
+        s = s.replaceAll("[^\\d.]", " ");
+        //parse the new string on space
+        String[] substrings = s.split(" ");
+        int count = 0;
+        for(String str : substrings){
+            if(substrings[count].contains(".")){
+                //the one containing the "." is the price
+                rtn = substrings[count];
+            }
+            count++;
+        }
+        Log.d("MyApp",rtn);
+        return rtn;
     }
 
     private void writeToFile(String data,Context context) {
