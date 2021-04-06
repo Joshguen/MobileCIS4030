@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         mImageView = findViewById(R.id.image_view);
         mCaptureBtn = findViewById(R.id.capture_image_btn);
 
-        extractText("0391230safds PENIS PUMP Iguana Iguana DON BUTTsecks BILLY'S DICK HMRJ10.01");
+        extractText("0391230safds PEN PUMP Iguana Iguana DON BUONsecks BILLY'S DOCTOR HMRJ10.01");
         extractPrice("123123123123123BUTTS MRJ506.69");
 
         com.example.version1.Receipt testReceipt1 = new com.example.version1.Receipt();
