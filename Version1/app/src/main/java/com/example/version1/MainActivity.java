@@ -32,6 +32,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.lang.*;
 import java.util.Arrays;
+import java.util.Stack;
 
 import static java.sql.DriverManager.println;
 
@@ -44,7 +45,6 @@ public class MainActivity extends AppCompatActivity {
     ImageView mImageView;
 
     Uri image_uri;
-
     TextView parsedText;
 
     @Override
@@ -55,8 +55,8 @@ public class MainActivity extends AppCompatActivity {
         mImageView = findViewById(R.id.image_view);
         mCaptureBtn = findViewById(R.id.capture_image_btn);
 
-        extractText("0391230safds PEN PUMP Iguana Iguana DON BUONsecks BILLY'S DOCTOR HMRJ10.01");
-        extractPrice("123123123123123BUTTS MRJ506.69");
+        Log.d("THINGY","THINGY");
+        testParse();
 
         com.example.version1.Receipt testReceipt1 = new com.example.version1.Receipt();
 
@@ -178,6 +178,53 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void testParse(){
+
+
+        receiptItem("0391230safds PENIL PUMP Iguana Iguana DON BUONsecks BILLY'S DOCTOR HMRJ10.01");
+        receiptItem("123123123123123BUTTS MRJ506.69");
+        receiptItem("fsedhjfbsdjfbsedlk");
+        receiptItem("75451");
+        receiptItem("40.45");
+
+    }
+
+    //TODO send in array list
+    private void receiptItem(String s){
+        Stack itemStack = new Stack();
+        Stack priceStack = new Stack();
+        Stack otherStack = new Stack();
+
+        Stack completeStack = new Stack();
+
+        String item = "";
+        String price = "";
+
+        //TODO run for each loop putting array items into proper stack
+        item = extractText(s);
+        price = extractPrice(s);
+
+        Log.d("item",item+ " "+price+"\n");
+
+        if(item != "" && price != ""){
+            //TODO create receipt item
+            completeStack.push(item+":"+price);
+        }
+        else if(item == "" && price == ""){
+            otherStack.push(s);
+        }else{
+            if(item != ""){
+                itemStack.push(item);
+                //store in item stack
+            }else if(price != ""){
+                priceStack.push(price);
+                //store in price stack
+            }
+        }
+
+        Log.d("newStack",completeStack + "\n" + itemStack + "\n" + priceStack + "\n" +otherStack + "\n" );
+    }
+
     private String extractText(String s){
         String rtn = "";
         //splitting the string to extra all caps characters
@@ -188,7 +235,7 @@ public class MainActivity extends AppCompatActivity {
                 rtn = rtn+str;
             }
         }
-        Log.d("MyApp",rtn);
+        Log.d("THINGY",rtn);
         return rtn;
     }
 
@@ -206,7 +253,7 @@ public class MainActivity extends AppCompatActivity {
             }
             count++;
         }
-        Log.d("MyApp",rtn);
+        Log.d("THINGY",rtn);
         return rtn;
     }
 

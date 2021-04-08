@@ -1,0 +1,22 @@
+- Info extraction
+
+TODO:
+
+- Implement garbage filter
+	- Ignore HRJ etc, in extractText
+	- account for spaces
+	
+- arraylist into receiptItem
+	- turn output S from google cloud vision into ararylist
+	- add loop into receiptItem
+
+- Test with receipt, to see the stacks
+	- consult
+
+- Takes all stacks and convert into receipt Items
+
+- Display onto app, as list
+
+- Option to manually change price
+	- Talk to Gunny
+	- typing numbers easier than typing names of items
