@@ -55,7 +55,6 @@ public class MainActivity extends AppCompatActivity {
         mImageView = findViewById(R.id.image_view);
         mCaptureBtn = findViewById(R.id.capture_image_btn);
 
-        Log.d("THINGY","THINGY");
         testParse();
 
         com.example.version1.Receipt testReceipt1 = new com.example.version1.Receipt();
@@ -204,8 +203,6 @@ public class MainActivity extends AppCompatActivity {
         item = extractText(s);
         price = extractPrice(s);
 
-        Log.d("item",item+ " "+price+"\n");
-
         if(item != "" && price != ""){
             //TODO create receipt item
             completeStack.push(item+":"+price);
@@ -231,12 +228,21 @@ public class MainActivity extends AppCompatActivity {
         String[] substrings = s.split("[^A-Z]+");
         for (String str : substrings) {
             if(!str.isEmpty()){
-                //appending to create new string
-                rtn = rtn+str;
+                if(garbageCheck(str)){
+                    //appending to create new string
+                    rtn = rtn+str;
+                }
             }
         }
-        Log.d("THINGY",rtn);
         return rtn;
+    }
+
+    private boolean garbageCheck(String s){
+        if(s.equals("HMRJ") || s.contains("ZEHRS") || s.equals("MRJ") || s.equals("TM") || s.equals("RQ")){
+            Log.d("Test",s);
+            return true;
+        }
+        return false;
     }
 
     private String extractPrice(String s){
