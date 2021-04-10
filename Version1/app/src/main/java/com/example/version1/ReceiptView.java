@@ -53,29 +53,26 @@ public class ReceiptView extends AppCompatActivity {
         TextView babyGotBack = (TextView) findViewById(R.id.back_text);
         ListView listOfReceiptItems = (ListView) findViewById(R.id.receipt);
         final User[] currentUser = {new User("", -1)};
-        /*User testUser = new User("Test User", 1);
-        ReceiptItem testItem1 = new ReceiptItem("penis", 2000);
-        ReceiptItem testItem2 = new ReceiptItem("dildo", 200);*/
 
+        //getting array list from MainActivity and creating the receiptItems
         ArrayList<String> lines = new ArrayList<String>(Arrays.asList(getIntent().getStringArrayExtra("lines")));
-        //lines = getIntent().getStringArrayExtra("lines");
         Log.d("Testing", "Testing");
         System.out.println(lines);
-
         Receipt testReceipt1 = new Receipt();
-
         for (int i = 0; i < lines.size(); i++){
+            //splitting on ":" to seperate items and prices
             String[] strSplit = lines.get(i).split(":",2);
             ReceiptItem item = new ReceiptItem(strSplit[0],Double.parseDouble(strSplit[1]));
             testReceipt1.addItem(item);
         }
 
-        /*testReceipt1.addItem(testItem1);
-        testReceipt1.addItem(testItem2);*/
-        //get the spinner from the xml.
+        //creating the user list and the drop down
         Spinner dropdown = findViewById(R.id.spinner1);
         ArrayList<String> temp = new ArrayList<String>();
-        temp.add("");
+        if(userList.userList.size() == 0){
+            User toAdd = new User("Guest", 0);
+            userList.userList.add(toAdd);
+        }
         for (User user: userList.userList) {
             temp.add(user.name);
         }
@@ -122,9 +119,9 @@ public class ReceiptView extends AppCompatActivity {
                     // show it
                     alertDialog.show();
                 }
-                else if (position > 0) {
+                else if (position >= 0) {
                     System.out.println(position);
-                    currentUser[0] = userList.userList.get(position-1);
+                    currentUser[0] = userList.userList.get(position);
                 }
             }
             public void onNothingSelected(AdapterView<?> parent) {
@@ -133,13 +130,9 @@ public class ReceiptView extends AppCompatActivity {
         });
         dropdown.setAdapter(adapter);
 
-        testReceipt1.addItem(testItem1);
-        testReceipt1.addItem(testItem2);
-
+        //creating userReceipts
         Receipt userReceipt = new Receipt();
-
         double runningTot = 0;
-
         ArrayList<String> items = new ArrayList<String>();
         for (ReceiptItem item : testReceipt1.items) {
             String details = item.name + ":  $" + item.price;
