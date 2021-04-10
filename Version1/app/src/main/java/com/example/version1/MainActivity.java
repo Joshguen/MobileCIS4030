@@ -50,10 +50,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-//        User toAdd = new User("name", 0);
-//        User toAdd1 = new User("name2", 1);
-//        userList.userList.add(toAdd);
-//        userList.userList.add(toAdd1);
 
         mImageView = findViewById(R.id.image_view);
         mCaptureBtn = findViewById(R.id.capture_image_btn);
