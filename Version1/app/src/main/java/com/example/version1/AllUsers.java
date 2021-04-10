@@ -7,6 +7,7 @@ public class AllUsers {
 
     private static AllUsers instance;
 
+
     public static AllUsers getInstance() {
         if (instance == null)
             instance = new AllUsers();
