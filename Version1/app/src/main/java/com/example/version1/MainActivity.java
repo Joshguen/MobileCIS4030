@@ -29,12 +29,15 @@ import com.google.firebase.ml.vision.text.FirebaseVisionText;
 import com.google.firebase.ml.vision.text.FirebaseVisionTextRecognizer;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final int PERMISSION_CODE = 1000;
     private static final int IMAGE_CAPTURE_CODE = 1001;
+
+    AllUsers userList = AllUsers.getInstance();
 
     Button mCaptureBtn;
     ImageView mImageView;
@@ -47,6 +50,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+//        User toAdd = new User("name", 0);
+//        User toAdd1 = new User("name2", 1);
+//        userList.userList.add(toAdd);
+//        userList.userList.add(toAdd1);
 
         mImageView = findViewById(R.id.image_view);
         mCaptureBtn = findViewById(R.id.capture_image_btn);
