@@ -26,6 +26,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Stack;
 import java.util.concurrent.BlockingDeque;
 
 public class ReceiptView extends AppCompatActivity {
@@ -43,22 +44,25 @@ public class ReceiptView extends AppCompatActivity {
         TextView babyGotBack = (TextView) findViewById(R.id.back_text);
         ListView listOfReceiptItems = (ListView) findViewById(R.id.receipt);
 
-        User testUser = new User("Test User", 1);
+        /*User testUser = new User("Test User", 1);
         ReceiptItem testItem1 = new ReceiptItem("penis", 2000);
-        ReceiptItem testItem2 = new ReceiptItem("dildo", 200);
+        ReceiptItem testItem2 = new ReceiptItem("dildo", 200);*/
 
-        String[] lines = getIntent().getStringArrayExtra("lines");
-        Log.d("Testing", Arrays.deepToString(lines));
+        ArrayList<String> lines = new ArrayList<String>(Arrays.asList(getIntent().getStringArrayExtra("lines")));
+        //lines = getIntent().getStringArrayExtra("lines");
+        Log.d("Testing", "Testing");
+        System.out.println(lines);
 
         Receipt testReceipt1 = new Receipt();
 
-        for (int i = 0; i < lines.length; i++){
-            ReceiptItem item = new ReceiptItem(lines[i],0);
+        for (int i = 0; i < lines.size(); i++){
+            String[] strSplit = lines.get(i).split(":",2);
+            ReceiptItem item = new ReceiptItem(strSplit[0],Double.parseDouble(strSplit[1]));
             testReceipt1.addItem(item);
         }
 
-        testReceipt1.addItem(testItem1);
-        testReceipt1.addItem(testItem2);
+        /*testReceipt1.addItem(testItem1);
+        testReceipt1.addItem(testItem2);*/
 
 
         Receipt userReceipt = new Receipt();

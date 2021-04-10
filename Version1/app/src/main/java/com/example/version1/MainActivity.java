@@ -31,6 +31,7 @@ import com.google.firebase.ml.vision.text.FirebaseVisionTextRecognizer;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.lang.*;
+import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Stack;
@@ -56,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
         mImageView = findViewById(R.id.image_view);
         mCaptureBtn = findViewById(R.id.capture_image_btn);
 
-        testParse();
+        //testParse();
 
         com.example.version1.Receipt testReceipt1 = new com.example.version1.Receipt();
 
@@ -154,12 +155,15 @@ public class MainActivity extends AppCompatActivity {
             task.addOnSuccessListener(new OnSuccessListener<FirebaseVisionText>() {
                 @Override
                 public void onSuccess(FirebaseVisionText firebaseVisionText) {
-                    String s = firebaseVisionText.getText();
+                    //String s = firebaseVisionText.getText();
 
-                    writeToFile(s, getApplicationContext());
+                    //writeToFile(s, getApplicationContext());
 
-
-                    String[] lines = s.split("\\n");
+                    String s = "0391230safds PENIL PUMP Iguana Iguana DON BUONsecks BILLY'S DOCTOR HMRJ10.01\nTHIS SHOULD WORK 4.20\n123123123123123LOOLZ MRJ506.69\n";
+                    //splitting string to new lines
+                    s = receiptItem(s);
+                    String lines[] = s.split("\\n");
+                    Log.d("here","here");
 
                     Intent intent = new Intent(MainActivity.this, ReceiptView.class);
                     intent.putExtra("lines",lines);
@@ -184,25 +188,32 @@ public class MainActivity extends AppCompatActivity {
         s.add("THIS SHOULD WORK 4.20");
         s.add("123123123123123LOOLZ MRJ506.69");
 
-        receiptItem(s);
-
+        //receiptItem(s);
     }
 
     //TODO send in array list
-    private void receiptItem(ArrayList<String> s){
+    private String receiptItem(String str){
+
+        String lines[] = str.split("\\n");
+
+        //converting to arraylist
+        /*ArrayList<String> s = new ArrayList<String>(
+                Arrays.asList(str));*/
+
+
         Stack itemStack = new Stack();
         Stack priceStack = new Stack();
         Stack otherStack = new Stack();
 
         Stack completeStack = new Stack();
 
-        for(int i = 0; i < s.size(); i++){
+        for(String s: lines){
             String item = "";
             String price = "";
 
             //TODO run for each loop putting array items into proper stack
-            item = extractText(s.get(i));
-            price = extractPrice(s.get(i));
+            item = extractText(s);
+            price = extractPrice(s);
 
             if(item != "" && price != ""){
                 //TODO create receipt item
@@ -220,8 +231,14 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
-
         Log.d("newStack",completeStack + "\n" + itemStack + "\n" + priceStack + "\n" +otherStack + "\n" );
+
+        String rtn = "";
+        for(int i = 0; i < completeStack.size();i++){
+            rtn =  rtn + completeStack.get(i).toString() + "\n";
+        }
+        System.out.println(rtn);
+        return rtn;
     }
 
     private String extractText(String s){
@@ -241,7 +258,6 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean garbageCheck(String s){
         if(s.equals("HMRJ") || s.contains("ZEHRS") || s.equals("MRJ") || s.equals("TM") || s.equals("RQ")){
-            Log.d("Test",s);
             return false;
         }
         return true;
@@ -261,7 +277,6 @@ public class MainActivity extends AppCompatActivity {
             }
             count++;
         }
-        Log.d("THINGY",rtn);
         return rtn;
     }
 
