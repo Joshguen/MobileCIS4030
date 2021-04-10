@@ -45,6 +45,7 @@ public class ReceiptView extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         AllUsers userList = AllUsers.getInstance();
+        AllReceipts receiptList = AllReceipts.getInstance();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.receipt_view);
 
@@ -58,13 +59,14 @@ public class ReceiptView extends AppCompatActivity {
         ArrayList<String> lines = new ArrayList<String>(Arrays.asList(getIntent().getStringArrayExtra("lines")));
         Log.d("Testing", "Testing");
         System.out.println(lines);
-        Receipt testReceipt1 = new Receipt();
+        Receipt receipt = new Receipt();
         for (int i = 0; i < lines.size(); i++){
             //splitting on ":" to seperate items and prices
             String[] strSplit = lines.get(i).split(":",2);
             ReceiptItem item = new ReceiptItem(strSplit[0],Double.parseDouble(strSplit[1]));
-            testReceipt1.addItem(item);
+            receipt.addItem(item);
         }
+
 
         //creating the user list and the drop down
         Spinner dropdown = findViewById(R.id.spinner1);
@@ -134,7 +136,7 @@ public class ReceiptView extends AppCompatActivity {
         Receipt userReceipt = new Receipt();
         double runningTot = 0;
         ArrayList<String> items = new ArrayList<String>();
-        for (ReceiptItem item : testReceipt1.items) {
+        for (ReceiptItem item : receipt.items) {
             String details = item.name + ":  $" + item.price;
             items.add(details);
         }
@@ -149,9 +151,9 @@ public class ReceiptView extends AppCompatActivity {
                 String receiptItem = (String) parent.getItemAtPosition(position);
                 System.out.println("claimed item " + position + " as " + currentUser[0].name);
                 if(listOfReceiptItems.isItemChecked(position)){
-                    userReceipt.addItem(testReceipt1.items.get(position));
+                    userReceipt.addItem(receipt.items.get(position));
                 }else{
-                    userReceipt.removeItem(testReceipt1.items.get(position));
+                    userReceipt.removeItem(receipt.items.get(position));
                 }
                 TextView runningTotal = findViewById(R.id.running_total);
                 runningTotal.setText("Total: $" + String.valueOf(userReceipt.getTotal()));
@@ -164,6 +166,7 @@ public class ReceiptView extends AppCompatActivity {
 
         doneButton.setOnClickListener(v -> {
             //TODO
+            receiptList.receiptList.add(receipt);
             finish();
         });
     }

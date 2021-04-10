@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int PERMISSION_CODE = 1000;
     private static final int IMAGE_CAPTURE_CODE = 1001;
 
-    AllUsers userList = AllUsers.getInstance();
+    AllReceipts receiptList = AllReceipts.getInstance();
 
     Button mCaptureBtn;
     ImageView mImageView;
@@ -51,11 +51,7 @@ public class MainActivity extends AppCompatActivity {
     Uri image_uri;
     TextView parsedText;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
+    public void doThing(){
         mImageView = findViewById(R.id.image_view);
         mCaptureBtn = findViewById(R.id.capture_image_btn);
 
@@ -63,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
 
         com.example.version1.Receipt testReceipt1 = new com.example.version1.Receipt();
 
-
+        System.out.println("**** " + receiptList.receiptList.size());
         mCaptureBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -87,7 +83,22 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+    }
 
+    @Override
+    protected void onRestart(){
+        super.onRestart();
+        setContentView(R.layout.activity_main);
+        System.out.println("Restarting\n");
+        doThing();
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        doThing();
     }
 
     private void openCamera() {
@@ -169,6 +180,7 @@ public class MainActivity extends AppCompatActivity {
 
                     Intent intent = new Intent(MainActivity.this, ReceiptView.class);
                     intent.putExtra("lines",lines);
+                    //startActivityForResult(intent, 1);
                     startActivity(intent);
                     //parsedText.setText(s);
                 }
