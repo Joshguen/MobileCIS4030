@@ -14,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckedTextView;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -45,7 +46,6 @@ public class ReceiptView extends AppCompatActivity {
         User testUser = new User("Test User", 1);
         ReceiptItem testItem1 = new ReceiptItem("penis", 2000);
         ReceiptItem testItem2 = new ReceiptItem("dildo", 200);
-
 
         String[] lines = getIntent().getStringArrayExtra("lines");
         Log.d("Testing", Arrays.deepToString(lines));
@@ -82,7 +82,6 @@ public class ReceiptView extends AppCompatActivity {
                 System.out.println("you got; " + position);
                 if(listOfReceiptItems.isItemChecked(position)){
                     userReceipt.addItem(testReceipt1.items.get(position));
-                //    Toast.makeText(getApplicationContext(), "Running total: " + userReceipt.getTotal(), Toast.LENGTH_SHORT).show();
                 }else{
                     userReceipt.removeItem(testReceipt1.items.get(position));
                 }

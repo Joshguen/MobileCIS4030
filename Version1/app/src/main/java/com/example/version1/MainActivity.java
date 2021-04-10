@@ -31,6 +31,7 @@ import com.google.firebase.ml.vision.text.FirebaseVisionTextRecognizer;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.lang.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Stack;
 
@@ -178,44 +179,45 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void testParse(){
+        ArrayList<String> s = new ArrayList<String>();
+        s.add("0391230safds PENIL PUMP Iguana Iguana DON BUONsecks BILLY'S DOCTOR HMRJ10.01");
+        s.add("THIS SHOULD WORK 4.20");
+        s.add("123123123123123LOOLZ MRJ506.69");
 
-
-        receiptItem("0391230safds PENIL PUMP Iguana Iguana DON BUONsecks BILLY'S DOCTOR HMRJ10.01");
-        receiptItem("123123123123123BUTTS MRJ506.69");
-        receiptItem("fsedhjfbsdjfbsedlk");
-        receiptItem("75451");
-        receiptItem("40.45");
+        receiptItem(s);
 
     }
 
     //TODO send in array list
-    private void receiptItem(String s){
+    private void receiptItem(ArrayList<String> s){
         Stack itemStack = new Stack();
         Stack priceStack = new Stack();
         Stack otherStack = new Stack();
 
         Stack completeStack = new Stack();
 
-        String item = "";
-        String price = "";
+        for(int i = 0; i < s.size(); i++){
+            String item = "";
+            String price = "";
 
-        //TODO run for each loop putting array items into proper stack
-        item = extractText(s);
-        price = extractPrice(s);
+            //TODO run for each loop putting array items into proper stack
+            item = extractText(s.get(i));
+            price = extractPrice(s.get(i));
 
-        if(item != "" && price != ""){
-            //TODO create receipt item
-            completeStack.push(item+":"+price);
-        }
-        else if(item == "" && price == ""){
-            otherStack.push(s);
-        }else{
-            if(item != ""){
-                itemStack.push(item);
-                //store in item stack
-            }else if(price != ""){
-                priceStack.push(price);
-                //store in price stack
+            if(item != "" && price != ""){
+                //TODO create receipt item
+                completeStack.push(item+":"+price);
+            }
+            else if(item == "" && price == ""){
+                otherStack.push(s);
+            }else{
+                if(item != ""){
+                    itemStack.push(item);
+                    //store in item stack
+                }else if(price != ""){
+                    priceStack.push(price);
+                    //store in price stack
+                }
             }
         }
 
@@ -240,9 +242,9 @@ public class MainActivity extends AppCompatActivity {
     private boolean garbageCheck(String s){
         if(s.equals("HMRJ") || s.contains("ZEHRS") || s.equals("MRJ") || s.equals("TM") || s.equals("RQ")){
             Log.d("Test",s);
-            return true;
+            return false;
         }
-        return false;
+        return true;
     }
 
     private String extractPrice(String s){
