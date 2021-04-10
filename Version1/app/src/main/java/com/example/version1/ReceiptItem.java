@@ -1,8 +1,9 @@
 package com.example.version1;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class ReceiptItem {
+public class ReceiptItem implements Serializable {
     public String name;
     public double price;
     public ArrayList<User> claims = new ArrayList<User>();

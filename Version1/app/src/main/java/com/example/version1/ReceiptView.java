@@ -55,17 +55,25 @@ public class ReceiptView extends AppCompatActivity {
         ListView listOfReceiptItems = (ListView) findViewById(R.id.receipt);
         final User[] currentUser = {new User("", -1)};
 
+        System.out.println("HEllow");
         //getting array list from MainActivity and creating the receiptItems
-        ArrayList<String> lines = new ArrayList<String>(Arrays.asList(getIntent().getStringArrayExtra("lines")));
-        Log.d("Testing", "Testing");
-        System.out.println(lines);
-        Receipt receipt = new Receipt();
-        for (int i = 0; i < lines.size(); i++){
+        //ArrayList<String> lines = new ArrayList<String>(Arrays.asList(getIntent().getStringArrayExtra("lines")));
+        //Log.d("Testing", "Testing");
+        //System.out.println(lines);
+
+        //Intent i = getIntent();
+        Receipt receipt = (Receipt) getIntent().getSerializableExtra("receipt");
+        /*for(int i = 0; i < receipt.getLength(); i++){
+            System.out.print(receipt.items.get(i).name);
+            //System.out.println(receipt.items.get(i).claims.get(0).name);
+        }*/
+
+        /*for (int i = 0; i < lines.size(); i++){
             //splitting on ":" to seperate items and prices
             String[] strSplit = lines.get(i).split(":",2);
             ReceiptItem item = new ReceiptItem(strSplit[0],Double.parseDouble(strSplit[1]));
             receipt.addItem(item);
-        }
+        }*/
 
 
         //creating the user list and the drop down
@@ -152,8 +160,10 @@ public class ReceiptView extends AppCompatActivity {
                 System.out.println("claimed item " + position + " as " + currentUser[0].name);
                 if(listOfReceiptItems.isItemChecked(position)){
                     userReceipt.addItem(receipt.items.get(position));
+                    currentUser[0].claimItem(receipt.items.get(position));
                 }else{
                     userReceipt.removeItem(receipt.items.get(position));
+                    currentUser[0].unclaimItem(receipt.items.get(position));
                 }
                 TextView runningTotal = findViewById(R.id.running_total);
                 runningTotal.setText("Total: $" + String.valueOf(userReceipt.getTotal()));

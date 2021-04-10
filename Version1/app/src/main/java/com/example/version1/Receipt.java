@@ -2,9 +2,10 @@ package com.example.version1;
 
 import com.example.version1.ReceiptItem;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Receipt {
+public class Receipt implements Serializable {
     public ArrayList<ReceiptItem> items = new ArrayList<ReceiptItem>();
 
     public void addItem(ReceiptItem item) {

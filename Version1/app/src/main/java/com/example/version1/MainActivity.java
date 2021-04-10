@@ -9,9 +9,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -44,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int IMAGE_CAPTURE_CODE = 1001;
 
     AllReceipts receiptList = AllReceipts.getInstance();
+    AllUsers userList = AllUsers.getInstance();
 
     Button mCaptureBtn;
     ImageView mImageView;
@@ -60,29 +63,36 @@ public class MainActivity extends AppCompatActivity {
         com.example.version1.Receipt testReceipt1 = new com.example.version1.Receipt();
 
         System.out.println("**** " + receiptList.receiptList.size());
-        mCaptureBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //check permission
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-                {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED ||
-                                checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
-                            String[] permission = {Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
-                            requestPermissions(permission, PERMISSION_CODE);
-                        } else {
-                            //permissions granted
-                            openCamera();
-                        }
+        mCaptureBtn.setOnClickListener(v -> {
+            //check permission
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+            {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED ||
+                            checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
+                        String[] permission = {Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+                        requestPermissions(permission, PERMISSION_CODE);
+                    } else {
+                        //permissions granted
+                        openCamera();
                     }
                 }
-                else {
-                    //older than marshmallow
-                    openCamera();
-                }
+            }
+            else {
+                //older than marshmallow
+                openCamera();
             }
         });
+    }
+
+    private void openPreviousReceipt() {
+        System.out.println("tiddies");
+        Receipt currentReceipt = receiptList.receiptList.get(0);
+        System.out.println(currentReceipt.items);
+        Intent intent = new Intent(MainActivity.this, ReceiptView.class);
+        intent.putExtra("receipt", currentReceipt);
+        //startActivityForResult(intent, 1);
+        startActivity(intent);
     }
 
     @Override
@@ -91,13 +101,16 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         System.out.println("Restarting\n");
         doThing();
+        mImageView.setOnClickListener(v -> {
+            //check permission
+            openPreviousReceipt();
+        });
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         doThing();
     }
 
@@ -177,9 +190,16 @@ public class MainActivity extends AppCompatActivity {
                     s = receiptItem(s);
                     String lines[] = s.split("\\n");
                     Log.d("here","here");
+                    Receipt receipt = new Receipt();
+                    for (int i = 0; i < lines.length; i++){
+                        //splitting on ":" to seperate items and prices
+                        String[] strSplit = lines[i].split(":",2);
+                        ReceiptItem item = new ReceiptItem(strSplit[0],Double.parseDouble(strSplit[1]));
+                        receipt.addItem(item);
+                    }
 
                     Intent intent = new Intent(MainActivity.this, ReceiptView.class);
-                    intent.putExtra("lines",lines);
+                    intent.putExtra("receipt", receipt);
                     //startActivityForResult(intent, 1);
                     startActivity(intent);
                     //parsedText.setText(s);
