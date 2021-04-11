@@ -92,6 +92,7 @@ public class ReceiptView extends AppCompatActivity {
 
         dropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                System.out.println("Changed");
                 if(parent.getItemAtPosition(position).toString().equals("Add User")) {
                     LayoutInflater li = LayoutInflater.from(context);
                     View promptsView = li.inflate(R.layout.prompts, null);
@@ -133,6 +134,22 @@ public class ReceiptView extends AppCompatActivity {
                 }
                 else if (position >= 0) {
                     currentUser[0] = userList.userList.get(position);
+                    System.out.println(currentUser[0].ID);
+                    for (int i = 0; i < receipt.getLength(); i++) {
+                        boolean checkFlag = false;
+                        for (Integer user: receipt.items.get(i).claims) {
+                            System.out.println(user);
+                            if (user == currentUser[0].ID) {
+                                checkFlag = true;
+                            }
+                        }
+                        if (checkFlag) {
+                            listOfReceiptItems.setItemChecked(i, true);
+                        }else {
+                            listOfReceiptItems.setItemChecked(i, false);
+                        }
+                    }
+
                 }
             }
             public void onNothingSelected(AdapterView<?> parent) {
@@ -154,6 +171,7 @@ public class ReceiptView extends AppCompatActivity {
         listOfReceiptItems.setAdapter(arrayAdapter);
         listOfReceiptItems.setChoiceMode(listOfReceiptItems.CHOICE_MODE_MULTIPLE);
         for (int i = 0; i < receipt.getLength(); i++) {
+
             for (Integer user: receipt.items.get(i).claims) {
                 if (user == currentUser[0].ID) {
                     listOfReceiptItems.setItemChecked(i, true);
@@ -164,15 +182,11 @@ public class ReceiptView extends AppCompatActivity {
         listOfReceiptItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String receiptItem = (String) parent.getItemAtPosition(position);
-                System.out.println("claimed item " + position + " as " + currentUser[0].name);
                 for (int i = 0; i < receipt.getLength(); i++) {
                     if(listOfReceiptItems.isItemChecked(i)){
                         userReceipt.addItem(receipt.items.get(i));
-                        //currentUser[0].claimItem(receipt.items.get(i));
                     }else{
                         userReceipt.removeItem(receipt.items.get(i));
-                        //currentUser[0].unclaimItem(receipt.items.get(i));
                     }
                 }
                 TextView runningTotal = findViewById(R.id.running_total);
