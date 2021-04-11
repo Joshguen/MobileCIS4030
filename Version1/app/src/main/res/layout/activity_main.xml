@@ -22,12 +22,66 @@
             android:src="@drawable/corkyboi" />
 
         <ImageView
-            android:id="@+id/image_view"
+            android:id="@+id/image_view1"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_alignParentTop="true"
-            android:layout_marginLeft="94dp"
-            android:layout_marginTop="169dp" />
+            android:layout_marginLeft="50dp"
+            android:layout_marginTop="270dp"
+            android:visibility="invisible"
+            android:src="@drawable/box" />
+
+        <ImageView
+            android:id="@+id/image_view2"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="100dp"
+            android:layout_marginTop="270dp"
+            android:visibility="invisible"
+            android:src="@drawable/box" />
+
+
+        <ImageView
+            android:id="@+id/image_view3"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="150dp"
+            android:layout_marginTop="270dp"
+            android:visibility="invisible"
+            android:src="@drawable/box" />
+
+
+        <ImageView
+            android:id="@+id/image_view4"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="200dp"
+            android:layout_marginTop="270dp"
+            android:visibility="invisible"
+            android:src="@drawable/box" />
+
+        <ImageView
+            android:id="@+id/image_view5"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="250dp"
+            android:layout_marginTop="270dp"
+            android:visibility="invisible"
+            android:src="@drawable/box" />
+
+        <ImageView
+            android:id="@+id/image_view6"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="300dp"
+            android:layout_marginTop="270dp"
+            android:visibility="invisible"
+            android:src="@drawable/box" />
 
         <Button
             android:id="@+id/capture_image_btn"

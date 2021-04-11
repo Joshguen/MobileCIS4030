@@ -45,6 +45,7 @@ public class ReceiptView extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         AllUsers userList = AllUsers.getInstance();
+        AllReceipts receiptList = AllReceipts.getInstance();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.receipt_view);
 
@@ -55,16 +56,24 @@ public class ReceiptView extends AppCompatActivity {
         final User[] currentUser = {new User("", -1)};
 
         //getting array list from MainActivity and creating the receiptItems
-        ArrayList<String> lines = new ArrayList<String>(Arrays.asList(getIntent().getStringArrayExtra("lines")));
-        Log.d("Testing", "Testing");
-        System.out.println(lines);
-        Receipt testReceipt1 = new Receipt();
-        for (int i = 0; i < lines.size(); i++){
+        //ArrayList<String> lines = new ArrayList<String>(Arrays.asList(getIntent().getStringArrayExtra("lines")));
+        //Log.d("Testing", "Testing");
+        //System.out.println(lines);
+
+        //Intent i = getIntent();
+        Receipt receipt = (Receipt) getIntent().getSerializableExtra("receipt");
+        /*for(int i = 0; i < receipt.getLength(); i++){
+            System.out.print(receipt.items.get(i).name);
+            //System.out.println(receipt.items.get(i).claims.get(0).name);
+        }*/
+
+        /*for (int i = 0; i < lines.size(); i++){
             //splitting on ":" to seperate items and prices
             String[] strSplit = lines.get(i).split(":",2);
             ReceiptItem item = new ReceiptItem(strSplit[0],Double.parseDouble(strSplit[1]));
-            testReceipt1.addItem(item);
-        }
+            receipt.addItem(item);
+        }*/
+
 
         //creating the user list and the drop down
         Spinner dropdown = findViewById(R.id.spinner1);
@@ -78,8 +87,12 @@ public class ReceiptView extends AppCompatActivity {
         }
         temp.add("Add User");
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, temp);
+        //sets default user to guest
+        currentUser[0] = userList.userList.get(0);
+
         dropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                System.out.println("Changed");
                 if(parent.getItemAtPosition(position).toString().equals("Add User")) {
                     LayoutInflater li = LayoutInflater.from(context);
                     View promptsView = li.inflate(R.layout.prompts, null);
@@ -120,8 +133,23 @@ public class ReceiptView extends AppCompatActivity {
                     alertDialog.show();
                 }
                 else if (position >= 0) {
-                    System.out.println(position);
                     currentUser[0] = userList.userList.get(position);
+                    System.out.println(currentUser[0].ID);
+                    for (int i = 0; i < receipt.getLength(); i++) {
+                        boolean checkFlag = false;
+                        for (Integer user: receipt.items.get(i).claims) {
+                            System.out.println(user);
+                            if (user == currentUser[0].ID) {
+                                checkFlag = true;
+                            }
+                        }
+                        if (checkFlag) {
+                            listOfReceiptItems.setItemChecked(i, true);
+                        }else {
+                            listOfReceiptItems.setItemChecked(i, false);
+                        }
+                    }
+
                 }
             }
             public void onNothingSelected(AdapterView<?> parent) {
@@ -131,10 +159,10 @@ public class ReceiptView extends AppCompatActivity {
         dropdown.setAdapter(adapter);
 
         //creating userReceipts
-        Receipt userReceipt = new Receipt();
+        Receipt userReceipt = new Receipt(-1);
         double runningTot = 0;
         ArrayList<String> items = new ArrayList<String>();
-        for (ReceiptItem item : testReceipt1.items) {
+        for (ReceiptItem item : receipt.items) {
             String details = item.name + ":  $" + item.price;
             items.add(details);
         }
@@ -142,16 +170,24 @@ public class ReceiptView extends AppCompatActivity {
                 (this, android.R.layout.simple_list_item_multiple_choice, items);
         listOfReceiptItems.setAdapter(arrayAdapter);
         listOfReceiptItems.setChoiceMode(listOfReceiptItems.CHOICE_MODE_MULTIPLE);
+        for (int i = 0; i < receipt.getLength(); i++) {
+
+            for (Integer user: receipt.items.get(i).claims) {
+                if (user == currentUser[0].ID) {
+                    listOfReceiptItems.setItemChecked(i, true);
+                }
+            }
+        }
 
         listOfReceiptItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String receiptItem = (String) parent.getItemAtPosition(position);
-                System.out.println("claimed item " + position + " as " + currentUser[0].name);
-                if(listOfReceiptItems.isItemChecked(position)){
-                    userReceipt.addItem(testReceipt1.items.get(position));
-                }else{
-                    userReceipt.removeItem(testReceipt1.items.get(position));
+                for (int i = 0; i < receipt.getLength(); i++) {
+                    if(listOfReceiptItems.isItemChecked(i)){
+                        userReceipt.addItem(receipt.items.get(i));
+                    }else{
+                        userReceipt.removeItem(receipt.items.get(i));
+                    }
                 }
                 TextView runningTotal = findViewById(R.id.running_total);
                 runningTotal.setText("Total: $" + String.valueOf(userReceipt.getTotal()));
@@ -164,6 +200,41 @@ public class ReceiptView extends AppCompatActivity {
 
         doneButton.setOnClickListener(v -> {
             //TODO
+            System.out.println("things"+receipt.getLength());
+            int flag = 0;
+            
+            for (int i = 0; i < receipt.getLength(); i++) {
+                if(listOfReceiptItems.isItemChecked(i)){
+                    currentUser[0].claimItem(receipt.items.get(i));
+//                    currentUser[0].unclaimItem(receipt.items.get(i));
+                }else{
+                    if(receipt.items.get(i).claims.size() > 0){
+                        currentUser[0].unclaimItem(receipt.items.get(i));
+
+                        System.out.println("unclaiming " + receipt.items.get(i).claims.size());
+                    }
+
+
+                    System.out.println("Testies");
+                }
+
+            }
+
+//            currentUser[0].claimedItems.items.remove(0);
+            //this only tells which receipt to use
+            for (int i = 0; i < receiptList.receiptList.size(); i++) {
+                if(receiptList.receiptList.get(i).ID == receipt.ID){
+                    receiptList.receiptList.set(i,receipt);
+                    flag = 1;
+                }
+                System.out.println(receiptList.receiptList.get(i).ID);
+
+            }
+            System.out.println(receipt.ID);
+
+            if(flag == 0){
+                receiptList.receiptList.add(receipt);
+            }
             finish();
         });
     }
