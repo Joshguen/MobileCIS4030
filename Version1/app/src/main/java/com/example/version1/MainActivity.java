@@ -101,15 +101,9 @@ public class MainActivity extends AppCompatActivity {
         if (receiptVal <= receiptList.receiptList.size()) {
 
             Receipt currentReceipt = receiptList.receiptList.get(receiptVal);
-    //        System.out.println("YOYOYYO PRE");
-    //        System.out.println(receiptList.receiptList.get(0).items.get(0).claims.size());
-
             Intent intent = new Intent(MainActivity.this, ReceiptView.class);
             intent.putExtra("receipt", currentReceipt);
-            //startActivityForResult(intent, 1);
             startActivity(intent);
-    //        System.out.println("YOYOYYO");
-    //        System.out.println(receiptList.receiptList.get(0).items.get(0).claims.size());
         }
 
     }
