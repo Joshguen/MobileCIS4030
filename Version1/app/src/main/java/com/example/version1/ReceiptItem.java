@@ -6,7 +6,7 @@ import java.util.ArrayList;
 public class ReceiptItem implements Serializable {
     public String name;
     public double price;
-    public ArrayList<User> claims = new ArrayList<User>();
+    public ArrayList<Integer> claims = new ArrayList<Integer>();
 
     //Constructor
     public ReceiptItem(String name, double price) {
@@ -15,10 +15,10 @@ public class ReceiptItem implements Serializable {
     }
 
     public void addClaim(User user) {
-        claims.add(user);
+        claims.add(user.ID);
     }
 
     public void removeClaim(User user) {
-        claims.remove(user);
+        claims.remove(user.ID);
     }
 }

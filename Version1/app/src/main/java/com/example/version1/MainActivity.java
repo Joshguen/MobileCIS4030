@@ -60,9 +60,8 @@ public class MainActivity extends AppCompatActivity {
 
         //testParse();
 
-        com.example.version1.Receipt testReceipt1 = new com.example.version1.Receipt();
+        //com.example.version1.Receipt testReceipt1 = new com.example.version1.Receipt();
 
-        System.out.println("**** " + receiptList.receiptList.size());
         mCaptureBtn.setOnClickListener(v -> {
             //check permission
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
@@ -86,20 +85,25 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void openPreviousReceipt() {
-        System.out.println("tiddies");
+        System.out.println("Sent ID: " + receiptList.receiptList.get(0).ID);
         Receipt currentReceipt = receiptList.receiptList.get(0);
-        System.out.println(currentReceipt.items);
+
+//        System.out.println("YOYOYYO PRE");
+//        System.out.println(receiptList.receiptList.get(0).items.get(0).claims.size());
+
         Intent intent = new Intent(MainActivity.this, ReceiptView.class);
         intent.putExtra("receipt", currentReceipt);
         //startActivityForResult(intent, 1);
         startActivity(intent);
+//        System.out.println("YOYOYYO");
+//        System.out.println(receiptList.receiptList.get(0).items.get(0).claims.size());
+
     }
 
     @Override
     protected void onRestart(){
         super.onRestart();
         setContentView(R.layout.activity_main);
-        System.out.println("Restarting\n");
         doThing();
         mImageView.setOnClickListener(v -> {
             //check permission
@@ -189,8 +193,10 @@ public class MainActivity extends AppCompatActivity {
                     //splitting string to new lines
                     s = receiptItem(s);
                     String lines[] = s.split("\\n");
-                    Log.d("here","here");
-                    Receipt receipt = new Receipt();
+                    //Log.d("here","here");
+                    int len = receiptList.receiptList.size()+1;
+                    System.out.println("Test "+len);
+                    Receipt receipt = new Receipt(len);
                     for (int i = 0; i < lines.length; i++){
                         //splitting on ":" to seperate items and prices
                         String[] strSplit = lines[i].split(":",2);
@@ -265,13 +271,12 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
-        Log.d("newStack",completeStack + "\n" + itemStack + "\n" + priceStack + "\n" +otherStack + "\n" );
+        //Log.d("newStack",completeStack + "\n" + itemStack + "\n" + priceStack + "\n" +otherStack + "\n" );
 
         String rtn = "";
         for(int i = 0; i < completeStack.size();i++){
             rtn =  rtn + completeStack.get(i).toString() + "\n";
         }
-        System.out.println(rtn);
         return rtn;
     }
 
