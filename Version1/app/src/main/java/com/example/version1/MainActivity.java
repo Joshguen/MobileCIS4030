@@ -49,13 +49,25 @@ public class MainActivity extends AppCompatActivity {
     AllUsers userList = AllUsers.getInstance();
 
     Button mCaptureBtn;
-    ImageView mImageView;
+    ImageView mImageView1;
+    ImageView mImageView2;
+    ImageView mImageView3;
+    ImageView mImageView4;
+    ImageView mImageView5;
+    ImageView mImageView6;
+
 
     Uri image_uri;
     TextView parsedText;
 
     public void doThing(){
-        mImageView = findViewById(R.id.image_view);
+        mImageView1 = findViewById(R.id.image_view1);
+        mImageView2 = findViewById(R.id.image_view2);
+        mImageView3 = findViewById(R.id.image_view3);
+        mImageView4 = findViewById(R.id.image_view4);
+        mImageView5 = findViewById(R.id.image_view5);
+        mImageView6 = findViewById(R.id.image_view6);
+
         mCaptureBtn = findViewById(R.id.capture_image_btn);
 
         //testParse();
@@ -84,19 +96,21 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void openPreviousReceipt() {
-        System.out.println("Sent ID: " + receiptList.receiptList.get(0).ID);
-        Receipt currentReceipt = receiptList.receiptList.get(0);
+    private void openPreviousReceipt(int receiptVal) {
+        System.out.println("Sent ID: " + receiptList.receiptList.get(receiptVal).ID);
+        if (receiptVal <= receiptList.receiptList.size()) {
 
-//        System.out.println("YOYOYYO PRE");
-//        System.out.println(receiptList.receiptList.get(0).items.get(0).claims.size());
+            Receipt currentReceipt = receiptList.receiptList.get(receiptVal);
+    //        System.out.println("YOYOYYO PRE");
+    //        System.out.println(receiptList.receiptList.get(0).items.get(0).claims.size());
 
-        Intent intent = new Intent(MainActivity.this, ReceiptView.class);
-        intent.putExtra("receipt", currentReceipt);
-        //startActivityForResult(intent, 1);
-        startActivity(intent);
-//        System.out.println("YOYOYYO");
-//        System.out.println(receiptList.receiptList.get(0).items.get(0).claims.size());
+            Intent intent = new Intent(MainActivity.this, ReceiptView.class);
+            intent.putExtra("receipt", currentReceipt);
+            //startActivityForResult(intent, 1);
+            startActivity(intent);
+    //        System.out.println("YOYOYYO");
+    //        System.out.println(receiptList.receiptList.get(0).items.get(0).claims.size());
+        }
 
     }
 
@@ -105,9 +119,46 @@ public class MainActivity extends AppCompatActivity {
         super.onRestart();
         setContentView(R.layout.activity_main);
         doThing();
-        mImageView.setOnClickListener(v -> {
-            //check permission
-            openPreviousReceipt();
+        int len = receiptList.receiptList.size();
+        for(int i = 0; i < len; i++){
+            switch(i) {
+                case 0:
+                    mImageView1.setVisibility(View.VISIBLE);
+                    break;
+                case 1:
+                    mImageView2.setVisibility(View.VISIBLE);
+                    break;
+                case 2:
+                    mImageView3.setVisibility(View.VISIBLE);
+                    break;
+                case 3:
+                    mImageView4.setVisibility(View.VISIBLE);
+                    break;
+                case 4:
+                    mImageView5.setVisibility(View.VISIBLE);
+                    break;
+                case 5:
+                    mImageView6.setVisibility(View.VISIBLE);
+                    break;
+            }
+        }
+        mImageView1.setOnClickListener(v -> {
+            openPreviousReceipt(0);
+        });
+        mImageView2.setOnClickListener(v -> {
+            openPreviousReceipt(1);
+        });
+        mImageView3.setOnClickListener(v -> {
+            openPreviousReceipt(2);
+        });
+        mImageView4.setOnClickListener(v -> {
+            openPreviousReceipt(3);
+        });
+        mImageView5.setOnClickListener(v -> {
+            openPreviousReceipt(4);
+        });
+        mImageView6.setOnClickListener(v -> {
+            openPreviousReceipt(5);
         });
     }
 
@@ -148,11 +199,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void openReceipt() {
-        Intent switchActivityIntent = new Intent(this, ReceiptView.class);
-        startActivity(switchActivityIntent);
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         //called when image was captured from camera
@@ -160,7 +206,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (resultCode == RESULT_OK) {
             //set the image captured to our ImageView
-            mImageView.setImageURI(image_uri);
+//            mImageView1.setImageURI(image_uri);
 
 //            Bundle bundle = data.getExtras();
 //            //from bundle, extract the image
@@ -220,15 +266,6 @@ public class MainActivity extends AppCompatActivity {
             });
 
         }
-    }
-
-    private void testParse(){
-        ArrayList<String> s = new ArrayList<String>();
-        s.add("0391230safds PENIL PUMP Iguana Iguana DON BUONsecks BILLY'S DOCTOR HMRJ10.01");
-        s.add("THIS SHOULD WORK 4.20");
-        s.add("123123123123123LOOLZ MRJ506.69");
-
-        //receiptItem(s);
     }
 
     //TODO send in array list
