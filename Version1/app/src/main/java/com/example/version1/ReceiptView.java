@@ -160,9 +160,6 @@ public class ReceiptView extends AppCompatActivity {
                         userReceipt.removeItem(receipt.items.get(i));
                     }
                 }
-                if(listOfReceiptItems.isItemChecked(i)){
-                        runningTot += receipt.items.get(i).price;
-                }
                 //System.out.println(runningTot);
                 TextView runningTotal = findViewById(R.id.running_total);
                 runningTotal.setText("Total: $" + String.valueOf(runningTot));
@@ -222,15 +219,11 @@ public class ReceiptView extends AppCompatActivity {
             for (int i = 0; i < receipt.getLength(); i++) {
                 if(listOfReceiptItems.isItemChecked(i)){
                     currentUser[0].claimItem(receipt.items.get(i));
-//                    currentUser[0].unclaimItem(receipt.items.get(i));
                 }else{
-                    if(receipt.items.get(i).claims.size() > 0){
+                    if(receipt.items.get(i).claims.size()-1 > 0){
                         currentUser[0].unclaimItem(receipt.items.get(i));
-
                         System.out.println("unclaiming " + receipt.items.get(i).claims.size());
                     }
-
-
                     System.out.println("Testies");
                 }
 
