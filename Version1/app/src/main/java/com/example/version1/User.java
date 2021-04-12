@@ -22,7 +22,6 @@ public class User implements Serializable {
 
     //adds an item to receipt of the user for easier management
     public void unclaimItem(ReceiptItem item) {
-        System.out.println("unclaiming "  + item.name);
         claimedItems.removeItem(item);
         item.removeClaim(this);
     }
