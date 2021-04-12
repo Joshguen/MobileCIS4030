@@ -28,6 +28,8 @@ import com.google.firebase.ml.vision.common.FirebaseVisionImage;
 import com.google.firebase.ml.vision.text.FirebaseVisionText;
 import com.google.firebase.ml.vision.text.FirebaseVisionTextRecognizer;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.lang.*;
@@ -158,19 +160,21 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess(FirebaseVisionText firebaseVisionText) {
                     //String s = firebaseVisionText.getText();
-
-                    //writeToFile(s, getApplicationContext());
-
                     String s = "0391230safds PENIL PUMP Iguana Iguana DON BUONsecks BILLY'S DOCTOR HMRJ10.01\nTHIS SHOULD WORK 4.20\n123123123123123LOOLZ MRJ506.69\n";
+
+                    save(s);
+//                    writeToFile(s, getApplicationContext());
+
                     //splitting string to new lines
                     s = receiptItem(s);
                     String lines[] = s.split("\\n");
-                    Log.d("here","here");
+                    Log.d("here", "here");
 
                     Intent intent = new Intent(MainActivity.this, ReceiptView.class);
-                    intent.putExtra("lines",lines);
+                    intent.putExtra("lines", lines);
                     startActivity(intent);
                     //parsedText.setText(s);
+
                 }
             });
 
@@ -280,6 +284,32 @@ public class MainActivity extends AppCompatActivity {
             count++;
         }
         return rtn;
+    }
+
+    private void save(String s){
+        String FILE_NAME = "data.txt";
+        FileOutputStream fos = null;
+
+        try {
+            fos = openFileOutput(FILE_NAME, MODE_PRIVATE);
+            fos.write(s.getBytes());
+
+            Toast.makeText(this, "Saved to " + getFilesDir() + "/" + FILE_NAME,
+                    Toast.LENGTH_LONG).show();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (fos != null) {
+                try {
+                    fos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
     }
 
     private void writeToFile(String data,Context context) {
