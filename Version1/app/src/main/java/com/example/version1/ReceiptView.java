@@ -176,6 +176,8 @@ public class ReceiptView extends AppCompatActivity {
                 runningTotal.setText("Total: $" + String.valueOf(userReceipt.getTotal()));
             }
         });
+        final int[] changeFlag = {-1};
+        final String[] toChange = {""};
         listOfReceiptItems.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
@@ -197,9 +199,9 @@ public class ReceiptView extends AppCompatActivity {
                         .setPositiveButton("OK",
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog,int id) {
+                                        toChange[0] = userInput.getText().toString();
                                         receipt.items.get(position).price = Double.valueOf(userInput.getText().toString());
-                                        finish();
-                                        startActivity(getIntent());
+                                        changeFlag[0] = position;
                                     }
                                 })
                         .setNegativeButton("Cancel",
@@ -217,7 +219,24 @@ public class ReceiptView extends AppCompatActivity {
                 return false;
             }
         });
+        if (changeFlag[0] != -1) {
+            listOfReceiptItems.getItemAtPosition(changeFlag[0]);
+            ArrayList<String> items2 = new ArrayList<String>();
+            String details;
+            for (int i = 0; i < receipt.items.size(); i++) {
+                if (i == changeFlag[0]) {
+                    details = receipt.items.get(changeFlag[0]).name + ":  $" + Double.valueOf(toChange[0]);
+                } else {
+                    details = receipt.items.get(i).name + ":  $" + receipt.items.get(i).price;
+                }
+                items2.add(details);
+            }
 
+            final ArrayAdapter<String> arrayAdapter1 = new ArrayAdapter<String>
+                    (this, android.R.layout.simple_list_item_multiple_choice, items2);
+            listOfReceiptItems.setAdapter(arrayAdapter1);
+            listOfReceiptItems.setChoiceMode(listOfReceiptItems.CHOICE_MODE_MULTIPLE);
+        }
         babyGotBack.setOnClickListener(v -> {
             finish();
         });
