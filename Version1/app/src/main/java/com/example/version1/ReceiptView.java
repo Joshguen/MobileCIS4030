@@ -16,11 +16,13 @@ import android.widget.TextView;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class ReceiptView extends AppCompatActivity {
 
     final Context context = this;
+    DecimalFormat df = new DecimalFormat("#.00");
 
     private static final int PERMISSION_CODE = 1000;
     private static final int IMAGE_CAPTURE_CODE = 1001;
@@ -55,6 +57,7 @@ public class ReceiptView extends AppCompatActivity {
         //sets default user to guest
         currentUser[0] = userList.userList.get(0);
 
+        //This is the user OnClick
         dropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 System.out.println("Changed");
@@ -135,7 +138,9 @@ public class ReceiptView extends AppCompatActivity {
         listOfReceiptItems.setAdapter(arrayAdapter);
         listOfReceiptItems.setChoiceMode(listOfReceiptItems.CHOICE_MODE_MULTIPLE);
         runningTot = 0;
+        double netTotal = 0;
         for (int i = 0; i < receipt.getLength(); i++) {
+            netTotal += receipt.items.get(i).price;
             for (Integer user: receipt.items.get(i).claims) {
                 if (user == currentUser[0].ID) {
                     listOfReceiptItems.setItemChecked(i, true);
@@ -145,27 +150,31 @@ public class ReceiptView extends AppCompatActivity {
                 runningTot += receipt.items.get(i).price;
             }
             TextView runningTotal = findViewById(R.id.running_total);
-            runningTotal.setText("Total: $" + String.valueOf(runningTot));
+            runningTotal.setText("Net Total: $" + df.format(netTotal) + ". Total: $" + df.format(runningTot));
         }
 
+        //THis is the receipt onclick
         listOfReceiptItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                double netTotal = 0;
                 runningTot = 0;
                 for (int i = 0; i < receipt.getLength(); i++) {
+                    netTotal += receipt.items.get(i).price;
                     if (listOfReceiptItems.isItemChecked(i)) {
                         userReceipt.addItem(receipt.items.get(i));
-                        runningTot += receipt.items.get(i).price;
+                        runningTot += receipt.items.get(i).price / (receipt.items.get(position).claims.size() + 1);
                     }else{
                         userReceipt.removeItem(receipt.items.get(i));
                     }
                 }
                 //System.out.println(runningTot);
                 TextView runningTotal = findViewById(R.id.running_total);
-                runningTotal.setText("Total: $" + String.valueOf(runningTot));
+                runningTotal.setText("Net Total: $" + df.format(netTotal) + ". Total: $" + df.format(runningTot));
             }
         });
-        final int[] changeFlag = {-1};
+
+        //Edit prices onclick
         final String[] toChange = {""};
         listOfReceiptItems.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
@@ -193,7 +202,7 @@ public class ReceiptView extends AppCompatActivity {
                                         ArrayAdapter adapter = (ArrayAdapter ) listOfReceiptItems.getAdapter();
                                         String item = receipt.items.get(position).name + ":  $" + Double.valueOf(toChange[0]);
                                         items.set(position, item);
-                                        arrayAdapter.notifyDataSetChanged();
+                                        adapter.notifyDataSetChanged();
                                     }
                                 })
                         .setNegativeButton("Cancel",
