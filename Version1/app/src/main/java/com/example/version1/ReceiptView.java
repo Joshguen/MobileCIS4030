@@ -24,6 +24,7 @@ public class ReceiptView extends AppCompatActivity {
 
     private static final int PERMISSION_CODE = 1000;
     private static final int IMAGE_CAPTURE_CODE = 1001;
+    public double runningTot = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,26 +38,7 @@ public class ReceiptView extends AppCompatActivity {
         TextView babyGotBack = (TextView) findViewById(R.id.back_text);
         ListView listOfReceiptItems = (ListView) findViewById(R.id.receipt);
         final User[] currentUser = {new User("", -1)};
-
-        //getting array list from MainActivity and creating the receiptItems
-        //ArrayList<String> lines = new ArrayList<String>(Arrays.asList(getIntent().getStringArrayExtra("lines")));
-        //Log.d("Testing", "Testing");
-        //System.out.println(lines);
-
-        //Intent i = getIntent();
         Receipt receipt = (Receipt) getIntent().getSerializableExtra("receipt");
-        /*for(int i = 0; i < receipt.getLength(); i++){
-            System.out.print(receipt.items.get(i).name);
-            //System.out.println(receipt.items.get(i).claims.get(0).name);
-        }*/
-
-        /*for (int i = 0; i < lines.size(); i++){
-            //splitting on ":" to seperate items and prices
-            String[] strSplit = lines.get(i).split(":",2);
-            ReceiptItem item = new ReceiptItem(strSplit[0],Double.parseDouble(strSplit[1]));
-            receipt.addItem(item);
-        }*/
-
 
         //creating the user list and the drop down
         Spinner dropdown = findViewById(R.id.spinner1);
@@ -143,7 +125,6 @@ public class ReceiptView extends AppCompatActivity {
 
         //creating userReceipts
         Receipt userReceipt = new Receipt(-1);
-        double runningTot = 0;
         ArrayList<String> items = new ArrayList<String>();
         for (ReceiptItem item : receipt.items) {
             String details = item.name + ":  $" + item.price;
@@ -153,27 +134,35 @@ public class ReceiptView extends AppCompatActivity {
                 (this, android.R.layout.simple_list_item_multiple_choice, items);
         listOfReceiptItems.setAdapter(arrayAdapter);
         listOfReceiptItems.setChoiceMode(listOfReceiptItems.CHOICE_MODE_MULTIPLE);
+        runningTot = 0;
         for (int i = 0; i < receipt.getLength(); i++) {
-
             for (Integer user: receipt.items.get(i).claims) {
                 if (user == currentUser[0].ID) {
                     listOfReceiptItems.setItemChecked(i, true);
                 }
             }
+            if(listOfReceiptItems.isItemChecked(i)){
+                runningTot += receipt.items.get(i).price;
+            }
+            TextView runningTotal = findViewById(R.id.running_total);
+            runningTotal.setText("Total: $" + String.valueOf(runningTot));
         }
 
         listOfReceiptItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                runningTot = 0;
                 for (int i = 0; i < receipt.getLength(); i++) {
                     if (listOfReceiptItems.isItemChecked(i)) {
                         userReceipt.addItem(receipt.items.get(i));
-                    } else {
+                        runningTot += receipt.items.get(i).price;
+                    }else{
                         userReceipt.removeItem(receipt.items.get(i));
                     }
                 }
+                //System.out.println(runningTot);
                 TextView runningTotal = findViewById(R.id.running_total);
-                runningTotal.setText("Total: $" + String.valueOf(userReceipt.getTotal()));
+                runningTotal.setText("Total: $" + String.valueOf(runningTot));
             }
         });
         final int[] changeFlag = {-1};
@@ -235,11 +224,11 @@ public class ReceiptView extends AppCompatActivity {
                 if(listOfReceiptItems.isItemChecked(i)){
                     currentUser[0].claimItem(receipt.items.get(i));
                 }else{
-                    if(receipt.items.get(i).claims.size() > 0){
+                    if(receipt.items.get(i).claims.size()-1 > 0){
                         currentUser[0].unclaimItem(receipt.items.get(i));
-
                         System.out.println("unclaiming " + receipt.items.get(i).claims.size());
                     }
+                    System.out.println("Testies");
                 }
 
             }

@@ -101,15 +101,9 @@ public class MainActivity extends AppCompatActivity {
         if (receiptVal <= receiptList.receiptList.size()) {
 
             Receipt currentReceipt = receiptList.receiptList.get(receiptVal);
-    //        System.out.println("YOYOYYO PRE");
-    //        System.out.println(receiptList.receiptList.get(0).items.get(0).claims.size());
-
             Intent intent = new Intent(MainActivity.this, ReceiptView.class);
             intent.putExtra("receipt", currentReceipt);
-            //startActivityForResult(intent, 1);
             startActivity(intent);
-    //        System.out.println("YOYOYYO");
-    //        System.out.println(receiptList.receiptList.get(0).items.get(0).claims.size());
         }
 
     }
@@ -239,9 +233,7 @@ public class MainActivity extends AppCompatActivity {
                     //splitting string to new lines
                     s = receiptItem(s);
                     String lines[] = s.split("\\n");
-                    //Log.d("here","here");
                     int len = receiptList.receiptList.size()+1;
-                    System.out.println("Test "+len);
                     Receipt receipt = new Receipt(len);
                     for (int i = 0; i < lines.length; i++){
                         //splitting on ":" to seperate items and prices
@@ -271,12 +263,8 @@ public class MainActivity extends AppCompatActivity {
     //TODO send in array list
     private String receiptItem(String str){
 
+        //converting string to string array
         String lines[] = str.split("\\n");
-
-        //converting to arraylist
-        /*ArrayList<String> s = new ArrayList<String>(
-                Arrays.asList(str));*/
-
 
         Stack itemStack = new Stack();
         Stack priceStack = new Stack();
@@ -288,7 +276,6 @@ public class MainActivity extends AppCompatActivity {
             String item = "";
             String price = "";
 
-            //TODO run for each loop putting array items into proper stack
             item = extractText(s);
             price = extractPrice(s);
 
@@ -308,8 +295,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
-        //Log.d("newStack",completeStack + "\n" + itemStack + "\n" + priceStack + "\n" +otherStack + "\n" );
-
         String rtn = "";
         for(int i = 0; i < completeStack.size();i++){
             rtn =  rtn + completeStack.get(i).toString() + "\n";
