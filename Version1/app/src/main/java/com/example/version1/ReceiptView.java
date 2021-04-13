@@ -224,7 +224,6 @@ public class ReceiptView extends AppCompatActivity {
                         currentUser[0].unclaimItem(receipt.items.get(i));
                         System.out.println("unclaiming " + receipt.items.get(i).claims.size());
                     }
-                    System.out.println("Testies");
                 }
 
             }

@@ -36,6 +36,8 @@ import java.lang.*;
 import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Stack;
 
 import static java.sql.DriverManager.println;
@@ -225,13 +227,15 @@ public class MainActivity extends AppCompatActivity {
             task.addOnSuccessListener(new OnSuccessListener<FirebaseVisionText>() {
                 @Override
                 public void onSuccess(FirebaseVisionText firebaseVisionText) {
-                    //String s = firebaseVisionText.getText();
+                    String s = firebaseVisionText.getText();
 
                     //writeToFile(s, getApplicationContext());
 
-                    String s = "0391230safds PENIL PUMP Iguana Iguana DON BUONsecks BILLY'S DOCTOR HMRJ10.01\nTHIS SHOULD WORK 4.20\n123123123123123LOOLZ MRJ506.69\n";
+                    //String s = "0391230safds PENIL PUMP Iguana Iguana DON BUONsecks BILLY'S DOCTOR HMRJ10.01\nTHIS SHOULD WORK 4.20\n123123123123123LOOLZ MRJ506.69\n" +
+                    //          "fewf23.00fdsafd\ndsaDS9.40\ndfsaf7.8\nPOONbfiduafowe\nfdsafGUTTS\n";
                     //splitting string to new lines
                     s = receiptItem(s);
+                    System.out.println("here**"+s);
                     String lines[] = s.split("\\n");
                     int len = receiptList.receiptList.size()+1;
                     Receipt receipt = new Receipt(len);
@@ -270,7 +274,15 @@ public class MainActivity extends AppCompatActivity {
         Stack priceStack = new Stack();
         Stack otherStack = new Stack();
 
-        Stack completeStack = new Stack();
+        Queue<String> pQ = new LinkedList<>();
+        Queue<String> iQ = new LinkedList<>();
+
+        int countPrice = 0;
+        int countItem = 0;
+
+        //Stack completeStack = new Stack();
+        String rtn = "";
+        String temp = "";
 
         for(String s: lines){
             String item = "";
@@ -280,25 +292,37 @@ public class MainActivity extends AppCompatActivity {
             price = extractPrice(s);
 
             if(item != "" && price != ""){
-                //TODO create receipt item
-                completeStack.push(item+":"+price);
+                //completeStack.push(item+":"+price);
+                rtn = rtn + item +":"+price+"\n";
             }
             else if(item == "" && price == ""){
                 otherStack.push(s);
             }else{
                 if(item != ""){
-                    itemStack.push(item);
+                    iQ.add(item);
+                    if(pQ.size() > 0){
+                        temp = iQ.remove();
+                        rtn = rtn + temp + ":";
+                        temp = pQ.remove();
+                        rtn = rtn + temp + "\n";
+                    }
                     //store in item stack
-                }else if(price != ""){
-                    priceStack.push(price);
+                }else if(price != "." && price != ""){
+                    pQ.add(price);
+                    if(iQ.size() > 0){
+                        temp = iQ.remove();
+                        rtn = rtn + temp + ":";
+                        temp = pQ.remove();
+                        rtn = rtn + temp + "\n";
+                    }
                     //store in price stack
                 }
             }
         }
-        String rtn = "";
-        for(int i = 0; i < completeStack.size();i++){
+
+        /*for(int i = 0; i < completeStack.size();i++){
             rtn =  rtn + completeStack.get(i).toString() + "\n";
-        }
+        }*/
         return rtn;
     }
 
@@ -318,7 +342,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private boolean garbageCheck(String s){
-        if(s.equals("HMRJ") || s.contains("ZEHRS") || s.equals("MRJ") || s.equals("TM") || s.equals("RQ")){
+        if(s.equals("HMRJ") || s.contains("ZEHRS") || s.equals("MRJ") || s.equals("TM") || s.equals("RQ") || s.equals("HRJ")){
             return false;
         }
         return true;
@@ -330,13 +354,17 @@ public class MainActivity extends AppCompatActivity {
         s = s.replaceAll("[^\\d.]", " ");
         //parse the new string on space
         String[] substrings = s.split(" ");
-        int count = 0;
         for(String str : substrings){
-            if(substrings[count].contains(".")){
-                //the one containing the "." is the price
-                rtn = substrings[count];
+//            System.out.println("EXTRACTING" + str);
+            if(str.contains(".")){
+                try{
+                    Double.parseDouble(s);
+                    //the one containing the "." is the price
+                    rtn = str;
+                }catch(NumberFormatException e){
+                    //not a double
+                }
             }
-            count++;
         }
         return rtn;
     }
