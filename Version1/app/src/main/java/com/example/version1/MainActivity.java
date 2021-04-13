@@ -1,4 +1,4 @@
-package com.example.version1;
+ package com.example.version1;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -233,10 +233,9 @@ public class MainActivity extends AppCompatActivity {
             task.addOnSuccessListener(new OnSuccessListener<FirebaseVisionText>() {
                 @Override
                 public void onSuccess(FirebaseVisionText firebaseVisionText) {
-                    //String s = firebaseVisionText.getText();
-                    //allText += s;
-                    allText += "0391230safds PENIL PUMP Iguana Iguana DON BUONsecks BILLY'S DOCTOR HMRJ10.01\nTHIS SHOULD WORK 4.20\n123123123123123LOOLZ MRJ506.69\n";
-
+                    String s = firebaseVisionText.getText();
+                    allText += s;
+                    //allText += "0391230safds PENIL PUMP Iguana Iguana DON BUONsecks BILLY'S DOCTOR HMRJb 10.01\nTHIS SHOULD WORK 4.20\n123123123123123LOOLZ MRJ506.69\n";
                     //writeToFile(s, getApplicationContext());
 
                     //??You done fucker code here
@@ -260,13 +259,14 @@ public class MainActivity extends AppCompatActivity {
                                         ReceiptItem item = new ReceiptItem(strSplit[0],Double.parseDouble(strSplit[1]));
                                         receipt.addItem(item);
                                     }
-                                    allText = "";
 
                                     Intent intent = new Intent(MainActivity.this, ReceiptView.class);
                                     intent.putExtra("receipt", receipt);
                                     //startActivityForResult(intent, 1);
                                     startActivity(intent);
                                     //parsedText.setText(s);
+                                    allText = "";
+
                                     break;
                             }
                         }
@@ -346,9 +346,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        /*for(int i = 0; i < completeStack.size();i++){
-            rtn =  rtn + completeStack.get(i).toString() + "\n";
-        }*/
         return rtn;
     }
 
@@ -381,10 +378,9 @@ public class MainActivity extends AppCompatActivity {
         //parse the new string on space
         String[] substrings = s.split(" ");
         for(String str : substrings){
-//            System.out.println("EXTRACTING" + str);
             if(str.contains(".")){
                 try{
-                    Double.parseDouble(s);
+                    Double.parseDouble(str);
                     //the one containing the "." is the price
                     rtn = str;
                 }catch(NumberFormatException e){
