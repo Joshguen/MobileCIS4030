@@ -2,10 +2,12 @@ package com.example.version1;
 
 import com.example.version1.ReceiptItem;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Receipt {
+public class Receipt implements Serializable {
     public ArrayList<ReceiptItem> items = new ArrayList<ReceiptItem>();
+    public int ID;
 
     public void addItem(ReceiptItem item) {
         items.add(item);
@@ -17,6 +19,10 @@ public class Receipt {
 
     public int getLength() {
         return (items.size());
+    }
+
+    public Receipt(int ID){
+        this.ID = ID;
     }
 
     public ReceiptItem searchItem(String name, double price) {

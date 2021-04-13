@@ -9,9 +9,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -45,51 +47,122 @@ public class MainActivity extends AppCompatActivity {
     private static final int PERMISSION_CODE = 1000;
     private static final int IMAGE_CAPTURE_CODE = 1001;
 
+    AllReceipts receiptList = AllReceipts.getInstance();
     AllUsers userList = AllUsers.getInstance();
 
     Button mCaptureBtn;
-    ImageView mImageView;
+    ImageView mImageView1;
+    ImageView mImageView2;
+    ImageView mImageView3;
+    ImageView mImageView4;
+    ImageView mImageView5;
+    ImageView mImageView6;
+
 
     Uri image_uri;
     TextView parsedText;
+
+    public void doThing(){
+        mImageView1 = findViewById(R.id.image_view1);
+        mImageView2 = findViewById(R.id.image_view2);
+        mImageView3 = findViewById(R.id.image_view3);
+        mImageView4 = findViewById(R.id.image_view4);
+        mImageView5 = findViewById(R.id.image_view5);
+        mImageView6 = findViewById(R.id.image_view6);
+
+        mCaptureBtn = findViewById(R.id.capture_image_btn);
+
+        //testParse();
+
+        //com.example.version1.Receipt testReceipt1 = new com.example.version1.Receipt();
+
+        mCaptureBtn.setOnClickListener(v -> {
+            //check permission
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+            {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED ||
+                            checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
+                        String[] permission = {Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+                        requestPermissions(permission, PERMISSION_CODE);
+                    } else {
+                        //permissions granted
+                        openCamera();
+                    }
+                }
+            }
+            else {
+                //older than marshmallow
+                openCamera();
+            }
+        });
+    }
+
+    private void openPreviousReceipt(int receiptVal) {
+        System.out.println("Sent ID: " + receiptList.receiptList.get(receiptVal).ID);
+        if (receiptVal <= receiptList.receiptList.size()) {
+
+            Receipt currentReceipt = receiptList.receiptList.get(receiptVal);
+            Intent intent = new Intent(MainActivity.this, ReceiptView.class);
+            intent.putExtra("receipt", currentReceipt);
+            startActivity(intent);
+        }
+
+    }
+
+    @Override
+    protected void onRestart(){
+        super.onRestart();
+        setContentView(R.layout.activity_main);
+        doThing();
+        int len = receiptList.receiptList.size();
+        for(int i = 0; i < len; i++){
+            switch(i) {
+                case 0:
+                    mImageView1.setVisibility(View.VISIBLE);
+                    break;
+                case 1:
+                    mImageView2.setVisibility(View.VISIBLE);
+                    break;
+                case 2:
+                    mImageView3.setVisibility(View.VISIBLE);
+                    break;
+                case 3:
+                    mImageView4.setVisibility(View.VISIBLE);
+                    break;
+                case 4:
+                    mImageView5.setVisibility(View.VISIBLE);
+                    break;
+                case 5:
+                    mImageView6.setVisibility(View.VISIBLE);
+                    break;
+            }
+        }
+        mImageView1.setOnClickListener(v -> {
+            openPreviousReceipt(0);
+        });
+        mImageView2.setOnClickListener(v -> {
+            openPreviousReceipt(1);
+        });
+        mImageView3.setOnClickListener(v -> {
+            openPreviousReceipt(2);
+        });
+        mImageView4.setOnClickListener(v -> {
+            openPreviousReceipt(3);
+        });
+        mImageView5.setOnClickListener(v -> {
+            openPreviousReceipt(4);
+        });
+        mImageView6.setOnClickListener(v -> {
+            openPreviousReceipt(5);
+        });
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        mImageView = findViewById(R.id.image_view);
-        mCaptureBtn = findViewById(R.id.capture_image_btn);
-
-        //testParse();
-
-        com.example.version1.Receipt testReceipt1 = new com.example.version1.Receipt();
-
-
-        mCaptureBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //check permission
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-                {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED ||
-                                checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
-                            String[] permission = {Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
-                            requestPermissions(permission, PERMISSION_CODE);
-                        } else {
-                            //permissions granted
-                            openCamera();
-                        }
-                    }
-                }
-                else {
-                    //older than marshmallow
-                    openCamera();
-                }
-            }
-        });
-
+        doThing();
     }
 
     private void openCamera() {
@@ -122,11 +195,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void openReceipt() {
-        Intent switchActivityIntent = new Intent(this, ReceiptView.class);
-        startActivity(switchActivityIntent);
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         //called when image was captured from camera
@@ -134,7 +202,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (resultCode == RESULT_OK) {
             //set the image captured to our ImageView
-            mImageView.setImageURI(image_uri);
+//            mImageView1.setImageURI(image_uri);
 
 //            Bundle bundle = data.getExtras();
 //            //from bundle, extract the image
@@ -168,10 +236,18 @@ public class MainActivity extends AppCompatActivity {
                     //splitting string to new lines
                     s = receiptItem(s);
                     String lines[] = s.split("\\n");
-                    Log.d("here", "here");
+                    int len = receiptList.receiptList.size()+1;
+                    Receipt receipt = new Receipt(len);
+                    for (int i = 0; i < lines.length; i++){
+                        //splitting on ":" to seperate items and prices
+                        String[] strSplit = lines[i].split(":",2);
+                        ReceiptItem item = new ReceiptItem(strSplit[0],Double.parseDouble(strSplit[1]));
+                        receipt.addItem(item);
+                    }
 
                     Intent intent = new Intent(MainActivity.this, ReceiptView.class);
-                    intent.putExtra("lines", lines);
+                    intent.putExtra("receipt", receipt);
+                    //startActivityForResult(intent, 1);
                     startActivity(intent);
                     //parsedText.setText(s);
 
@@ -188,24 +264,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void testParse(){
-        ArrayList<String> s = new ArrayList<String>();
-        s.add("0391230safds PENIL PUMP Iguana Iguana DON BUONsecks BILLY'S DOCTOR HMRJ10.01");
-        s.add("THIS SHOULD WORK 4.20");
-        s.add("123123123123123LOOLZ MRJ506.69");
-
-        //receiptItem(s);
-    }
-
     //TODO send in array list
     private String receiptItem(String str){
 
+        //converting string to string array
         String lines[] = str.split("\\n");
-
-        //converting to arraylist
-        /*ArrayList<String> s = new ArrayList<String>(
-                Arrays.asList(str));*/
-
 
         Stack itemStack = new Stack();
         Stack priceStack = new Stack();
@@ -217,7 +280,6 @@ public class MainActivity extends AppCompatActivity {
             String item = "";
             String price = "";
 
-            //TODO run for each loop putting array items into proper stack
             item = extractText(s);
             price = extractPrice(s);
 
@@ -237,13 +299,10 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
-        Log.d("newStack",completeStack + "\n" + itemStack + "\n" + priceStack + "\n" +otherStack + "\n" );
-
         String rtn = "";
         for(int i = 0; i < completeStack.size();i++){
             rtn =  rtn + completeStack.get(i).toString() + "\n";
         }
-        System.out.println(rtn);
         return rtn;
     }
 
