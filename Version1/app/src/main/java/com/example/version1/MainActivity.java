@@ -1,11 +1,13 @@
-package com.example.version1;
+ package com.example.version1;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -47,8 +49,12 @@ public class MainActivity extends AppCompatActivity {
     private static final int PERMISSION_CODE = 1000;
     private static final int IMAGE_CAPTURE_CODE = 1001;
 
+    final Context context = this;
+
     AllReceipts receiptList = AllReceipts.getInstance();
     AllUsers userList = AllUsers.getInstance();
+
+    String allText = "";
 
     Button mCaptureBtn;
     ImageView mImageView1;
@@ -228,29 +234,49 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess(FirebaseVisionText firebaseVisionText) {
                     String s = firebaseVisionText.getText();
-
+                    allText += s;
+                    //allText += "0391230safds PENIL PUMP Iguana Iguana DON BUONsecks BILLY'S DOCTOR HMRJb 10.01\nTHIS SHOULD WORK 4.20\n123123123123123LOOLZ MRJ506.69\n";
                     //writeToFile(s, getApplicationContext());
 
-                    //String s = "0391230safds PENIL PUMP Iguana Iguana DON BUONsecks BILLY'S DOCTOR HMRJ10.01\nTHIS SHOULD WORK 4.20\n123123123123123LOOLZ MRJ506.69\n" +
-                    //          "fewf23.00fdsafd\ndsaDS9.40\ndfsaf7.8\nPOONbfiduafowe\nfdsafGUTTS\n";
-                    //splitting string to new lines
-                    s = receiptItem(s);
-                    System.out.println("here**"+s);
-                    String lines[] = s.split("\\n");
-                    int len = receiptList.receiptList.size()+1;
-                    Receipt receipt = new Receipt(len);
-                    for (int i = 0; i < lines.length; i++){
-                        //splitting on ":" to seperate items and prices
-                        String[] strSplit = lines[i].split(":",2);
-                        ReceiptItem item = new ReceiptItem(strSplit[0],Double.parseDouble(strSplit[1]));
-                        receipt.addItem(item);
-                    }
+                    //??You done fucker code here
+                    DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            switch (which){
+                                case DialogInterface.BUTTON_POSITIVE:
+                                    openCamera();
+                                    break;
 
-                    Intent intent = new Intent(MainActivity.this, ReceiptView.class);
-                    intent.putExtra("receipt", receipt);
-                    //startActivityForResult(intent, 1);
-                    startActivity(intent);
-                    //parsedText.setText(s);
+                                case DialogInterface.BUTTON_NEGATIVE:
+                                    //splitting string to new lines
+                                    allText = receiptItem(allText);
+                                    String lines[] = allText.split("\\n");
+                                    int len = receiptList.receiptList.size()+1;
+                                    Receipt receipt = new Receipt(len);
+                                    for (int i = 0; i < lines.length; i++){
+                                        //splitting on ":" to seperate items and prices
+                                        String[] strSplit = lines[i].split(":",2);
+                                        ReceiptItem item = new ReceiptItem(strSplit[0],Double.parseDouble(strSplit[1]));
+                                        receipt.addItem(item);
+                                    }
+
+                                    Intent intent = new Intent(MainActivity.this, ReceiptView.class);
+                                    intent.putExtra("receipt", receipt);
+                                    //startActivityForResult(intent, 1);
+                                    startActivity(intent);
+                                    //parsedText.setText(s);
+                                    allText = "";
+
+                                    break;
+                            }
+                        }
+                    };
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    builder.setMessage("Is there more to the receipt?").setPositiveButton("Yes", dialogClickListener)
+                            .setNegativeButton("No", dialogClickListener).show();
+
+
                 }
             });
 
@@ -320,9 +346,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        /*for(int i = 0; i < completeStack.size();i++){
-            rtn =  rtn + completeStack.get(i).toString() + "\n";
-        }*/
         return rtn;
     }
 
@@ -355,10 +378,9 @@ public class MainActivity extends AppCompatActivity {
         //parse the new string on space
         String[] substrings = s.split(" ");
         for(String str : substrings){
-//            System.out.println("EXTRACTING" + str);
             if(str.contains(".")){
                 try{
-                    Double.parseDouble(s);
+                    Double.parseDouble(str);
                     //the one containing the "." is the price
                     rtn = str;
                 }catch(NumberFormatException e){
