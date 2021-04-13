@@ -201,7 +201,10 @@ public class ReceiptView extends AppCompatActivity {
                                     public void onClick(DialogInterface dialog,int id) {
                                         toChange[0] = userInput.getText().toString();
                                         receipt.items.get(position).price = Double.valueOf(userInput.getText().toString());
-                                        changeFlag[0] = position;
+                                        ArrayAdapter adapter = (ArrayAdapter ) listOfReceiptItems.getAdapter();
+                                        String item = receipt.items.get(position).name + ":  $" + Double.valueOf(toChange[0]);
+                                        items.set(position, item);
+                                        arrayAdapter.notifyDataSetChanged();
                                     }
                                 })
                         .setNegativeButton("Cancel",
@@ -219,46 +222,24 @@ public class ReceiptView extends AppCompatActivity {
                 return false;
             }
         });
-        if (changeFlag[0] != -1) {
-            listOfReceiptItems.getItemAtPosition(changeFlag[0]);
-            ArrayList<String> items2 = new ArrayList<String>();
-            String details;
-            for (int i = 0; i < receipt.items.size(); i++) {
-                if (i == changeFlag[0]) {
-                    details = receipt.items.get(changeFlag[0]).name + ":  $" + Double.valueOf(toChange[0]);
-                } else {
-                    details = receipt.items.get(i).name + ":  $" + receipt.items.get(i).price;
-                }
-                items2.add(details);
-            }
 
-            final ArrayAdapter<String> arrayAdapter1 = new ArrayAdapter<String>
-                    (this, android.R.layout.simple_list_item_multiple_choice, items2);
-            listOfReceiptItems.setAdapter(arrayAdapter1);
-            listOfReceiptItems.setChoiceMode(listOfReceiptItems.CHOICE_MODE_MULTIPLE);
-        }
         babyGotBack.setOnClickListener(v -> {
             finish();
         });
 
         doneButton.setOnClickListener(v -> {
             //TODO
-            System.out.println("things"+receipt.getLength());
             int flag = 0;
             
             for (int i = 0; i < receipt.getLength(); i++) {
                 if(listOfReceiptItems.isItemChecked(i)){
                     currentUser[0].claimItem(receipt.items.get(i));
-//                    currentUser[0].unclaimItem(receipt.items.get(i));
                 }else{
                     if(receipt.items.get(i).claims.size() > 0){
                         currentUser[0].unclaimItem(receipt.items.get(i));
 
                         System.out.println("unclaiming " + receipt.items.get(i).claims.size());
                     }
-
-
-                    System.out.println("Testies");
                 }
 
             }
