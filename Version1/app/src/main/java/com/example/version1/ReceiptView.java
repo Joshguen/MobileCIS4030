@@ -145,7 +145,7 @@ public class ReceiptView extends AppCompatActivity {
                 runningTot += receipt.items.get(i).price;
             }
             TextView runningTotal = findViewById(R.id.running_total);
-            runningTotal.setText("Total: $" + String.valueOf(runningTot));
+            runningTotal.setText("\nTotal: $" + String.valueOf(runningTot));
         }
 
         listOfReceiptItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
