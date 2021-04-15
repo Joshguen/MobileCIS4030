@@ -52,7 +52,10 @@
             android:layout_toLeftOf="@+id/spinner1"
             android:layout_toStartOf="@+id/spinner1"
             android:hint="Receipt Name"
+            android:textStyle="bold"
             android:inputType="text"
+            android:imeOptions="actionDone"
+            android:singleLine="true"
             />
 
         <Spinner

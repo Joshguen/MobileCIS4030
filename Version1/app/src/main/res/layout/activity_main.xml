@@ -21,15 +21,21 @@
             android:layout_height="match_parent"
             android:src="@drawable/corkyboi" />
 
-        <ImageView
+        <TextView
             android:id="@+id/image_view1"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
             android:layout_alignParentTop="true"
             android:layout_marginLeft="50dp"
             android:layout_marginTop="270dp"
             android:visibility="invisible"
-            android:src="@drawable/box" />
+            android:background="@drawable/box"
+            android:text="THIS IS A BOI"
+            android:singleLine="true"
+            android:textColor="@color/black"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            />
 
 
         <ImageView

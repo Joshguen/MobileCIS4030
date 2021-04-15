@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
     String allText = "";
 
     Button mCaptureBtn;
-    ImageView mImageView1;
+    TextView mImageView1;
     ImageView mImageView2;
     ImageView mImageView3;
     ImageView mImageView4;
@@ -126,6 +126,7 @@ public class MainActivity extends AppCompatActivity {
             switch(i) {
                 case 0:
                     mImageView1.setVisibility(View.VISIBLE);
+                    mImageView1.setText(receiptList.receiptList.get(0).rName);
                     break;
                 case 1:
                     mImageView2.setVisibility(View.VISIBLE);
