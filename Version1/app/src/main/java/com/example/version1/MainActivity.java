@@ -1,11 +1,13 @@
-package com.example.version1;
+ package com.example.version1;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -38,6 +40,8 @@ import java.lang.*;
 import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Stack;
 
 import static java.sql.DriverManager.println;
@@ -47,16 +51,20 @@ public class MainActivity extends AppCompatActivity {
     private static final int PERMISSION_CODE = 1000;
     private static final int IMAGE_CAPTURE_CODE = 1001;
 
+    final Context context = this;
+
     AllReceipts receiptList = AllReceipts.getInstance();
     AllUsers userList = AllUsers.getInstance();
 
+    String allText = "";
+
     Button mCaptureBtn;
-    ImageView mImageView1;
-    ImageView mImageView2;
-    ImageView mImageView3;
-    ImageView mImageView4;
-    ImageView mImageView5;
-    ImageView mImageView6;
+    TextView mImageView1;
+    TextView mImageView2;
+    TextView mImageView3;
+    TextView mImageView4;
+    TextView mImageView5;
+    TextView mImageView6;
 
 
     Uri image_uri;
@@ -120,21 +128,27 @@ public class MainActivity extends AppCompatActivity {
             switch(i) {
                 case 0:
                     mImageView1.setVisibility(View.VISIBLE);
+                    mImageView1.setText(receiptList.receiptList.get(i).rName);
                     break;
                 case 1:
                     mImageView2.setVisibility(View.VISIBLE);
+                    mImageView2.setText(receiptList.receiptList.get(i).rName);
                     break;
                 case 2:
                     mImageView3.setVisibility(View.VISIBLE);
+                    mImageView3.setText(receiptList.receiptList.get(i).rName);
                     break;
                 case 3:
                     mImageView4.setVisibility(View.VISIBLE);
+                    mImageView4.setText(receiptList.receiptList.get(i).rName);
                     break;
                 case 4:
                     mImageView5.setVisibility(View.VISIBLE);
+                    mImageView5.setText(receiptList.receiptList.get(i).rName);
                     break;
                 case 5:
                     mImageView6.setVisibility(View.VISIBLE);
+                    mImageView6.setText(receiptList.receiptList.get(i).rName);
                     break;
             }
         }
@@ -227,29 +241,49 @@ public class MainActivity extends AppCompatActivity {
             task.addOnSuccessListener(new OnSuccessListener<FirebaseVisionText>() {
                 @Override
                 public void onSuccess(FirebaseVisionText firebaseVisionText) {
-                    //String s = firebaseVisionText.getText();
-                    String s = "0391230safds PENIL PUMP Iguana Iguana DON BUONsecks BILLY'S DOCTOR HMRJ10.01\nTHIS SHOULD WORK 4.20\n123123123123123LOOLZ MRJ506.69\n";
+                  
+                    String s = firebaseVisionText.getText();
+                    allText += s;
+                    //allText += "0391230safds PENIL PUMP Iguana Iguana DON BUONsecks BILLY'S DOCTOR HMRJb 10.01\nTHIS SHOULD WORK 4.20\n123123123123123LOOLZ MRJ506.69\n";
+                    //writeToFile(s, getApplicationContext());
 
-                    save(s);
-//                    writeToFile(s, getApplicationContext());
+                    //??You done fucker code here
+                    DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            switch (which){
+                                case DialogInterface.BUTTON_POSITIVE:
+                                    openCamera();
+                                    break;
 
-                    //splitting string to new lines
-                    s = receiptItem(s);
-                    String lines[] = s.split("\\n");
-                    int len = receiptList.receiptList.size()+1;
-                    Receipt receipt = new Receipt(len);
-                    for (int i = 0; i < lines.length; i++){
-                        //splitting on ":" to seperate items and prices
-                        String[] strSplit = lines[i].split(":",2);
-                        ReceiptItem item = new ReceiptItem(strSplit[0],Double.parseDouble(strSplit[1]));
-                        receipt.addItem(item);
-                    }
+                                case DialogInterface.BUTTON_NEGATIVE:
+                                    //splitting string to new lines
+                                    allText = receiptItem(allText);
+                                    String lines[] = allText.split("\\n");
+                                    int len = receiptList.receiptList.size()+1;
+                                    Receipt receipt = new Receipt(len);
+                                    for (int i = 0; i < lines.length; i++){
+                                        //splitting on ":" to seperate items and prices
+                                        String[] strSplit = lines[i].split(":",2);
+                                        ReceiptItem item = new ReceiptItem(strSplit[0],Double.parseDouble(strSplit[1]));
+                                        receipt.addItem(item);
+                                    }
 
-                    Intent intent = new Intent(MainActivity.this, ReceiptView.class);
-                    intent.putExtra("receipt", receipt);
-                    //startActivityForResult(intent, 1);
-                    startActivity(intent);
-                    //parsedText.setText(s);
+                                    Intent intent = new Intent(MainActivity.this, ReceiptView.class);
+                                    intent.putExtra("receipt", receipt);
+                                    //startActivityForResult(intent, 1);
+                                    startActivity(intent);
+                                    //parsedText.setText(s);
+                                    allText = "";
+
+                                    break;
+                            }
+                        }
+                    };
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    builder.setMessage("Is there more to the receipt?").setPositiveButton("Yes", dialogClickListener)
+                            .setNegativeButton("No", dialogClickListener).show();
 
                 }
             });
@@ -274,7 +308,15 @@ public class MainActivity extends AppCompatActivity {
         Stack priceStack = new Stack();
         Stack otherStack = new Stack();
 
-        Stack completeStack = new Stack();
+        Queue<String> pQ = new LinkedList<>();
+        Queue<String> iQ = new LinkedList<>();
+
+        int countPrice = 0;
+        int countItem = 0;
+
+        //Stack completeStack = new Stack();
+        String rtn = "";
+        String temp = "";
 
         for(String s: lines){
             String item = "";
@@ -284,25 +326,34 @@ public class MainActivity extends AppCompatActivity {
             price = extractPrice(s);
 
             if(item != "" && price != ""){
-                //TODO create receipt item
-                completeStack.push(item+":"+price);
+                //completeStack.push(item+":"+price);
+                rtn = rtn + item +":"+price+"\n";
             }
             else if(item == "" && price == ""){
                 otherStack.push(s);
             }else{
                 if(item != ""){
-                    itemStack.push(item);
+                    iQ.add(item);
+                    if(pQ.size() > 0){
+                        temp = iQ.remove();
+                        rtn = rtn + temp + ":";
+                        temp = pQ.remove();
+                        rtn = rtn + temp + "\n";
+                    }
                     //store in item stack
-                }else if(price != ""){
-                    priceStack.push(price);
+                }else if(price != "." && price != ""){
+                    pQ.add(price);
+                    if(iQ.size() > 0){
+                        temp = iQ.remove();
+                        rtn = rtn + temp + ":";
+                        temp = pQ.remove();
+                        rtn = rtn + temp + "\n";
+                    }
                     //store in price stack
                 }
             }
         }
-        String rtn = "";
-        for(int i = 0; i < completeStack.size();i++){
-            rtn =  rtn + completeStack.get(i).toString() + "\n";
-        }
+
         return rtn;
     }
 
@@ -322,7 +373,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private boolean garbageCheck(String s){
-        if(s.equals("HMRJ") || s.contains("ZEHRS") || s.equals("MRJ") || s.equals("TM") || s.equals("RQ")){
+        if(s.equals("HMRJ") || s.contains("ZEHRS") || s.equals("MRJ") || s.equals("TM") || s.equals("RQ") || s.equals("HRJ")){
             return false;
         }
         return true;
@@ -334,13 +385,16 @@ public class MainActivity extends AppCompatActivity {
         s = s.replaceAll("[^\\d.]", " ");
         //parse the new string on space
         String[] substrings = s.split(" ");
-        int count = 0;
         for(String str : substrings){
-            if(substrings[count].contains(".")){
-                //the one containing the "." is the price
-                rtn = substrings[count];
+            if(str.contains(".")){
+                try{
+                    Double.parseDouble(str);
+                    //the one containing the "." is the price
+                    rtn = str;
+                }catch(NumberFormatException e){
+                    //not a double
+                }
             }
-            count++;
         }
         return rtn;
     }
