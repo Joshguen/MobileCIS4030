@@ -88,7 +88,7 @@
             android:textSize="20dp"
             android:textStyle="bold"
             android:visibility="invisible"
-
+            android:fontFamily="serif-monospace"
             />
 
         <TextView
@@ -109,7 +109,8 @@
             android:textColor="@color/black"
             android:textSize="20dp"
             android:textStyle="bold"
-            android:visibility="invisible" />
+            android:visibility="invisible"
+            android:fontFamily="serif-monospace"/>
 
         <TextView
             android:id="@+id/image_view3"
@@ -129,7 +130,8 @@
             android:textColor="@color/black"
             android:textSize="20dp"
             android:textStyle="bold"
-            android:visibility="invisible" />
+            android:visibility="invisible"
+            android:fontFamily="serif-monospace"/>
 
         <TextView
             android:id="@+id/image_view4"
@@ -146,7 +148,8 @@
             android:textColor="@color/black"
             android:textSize="20dp"
             android:textStyle="bold"
-            android:visibility="invisible" />
+            android:visibility="invisible"
+            android:fontFamily="serif-monospace"/>
 
         <TextView
             android:id="@+id/image_view5"
@@ -163,7 +166,8 @@
             android:textColor="@color/black"
             android:textSize="20dp"
             android:textStyle="bold"
-            android:visibility="invisible" />
+            android:visibility="invisible"
+            android:fontFamily="serif-monospace"/>
 
         <TextView
             android:id="@+id/image_view6"
@@ -179,7 +183,8 @@
             android:textColor="@color/black"
             android:textSize="20dp"
             android:textStyle="bold"
-            android:visibility="invisible" />
+            android:visibility="invisible"
+            android:fontFamily="serif-monospace"/>
 
         <Button
             android:id="@+id/capture_image_btn"
@@ -197,7 +202,7 @@
             android:layout_marginStart="0dp"
             android:text="capture image"
             android:textSize="32dp"
-            android:typeface="monospace"
+            android:fontFamily="serif-monospace"
             android:background="@color/purple_700"
             />
 
