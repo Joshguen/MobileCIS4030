@@ -30,77 +30,106 @@
             android:layout_marginTop="270dp"
             android:visibility="invisible"
             android:background="@drawable/box"
-            android:text="THIS IS A BOI"
             android:singleLine="true"
             android:textColor="@color/black"
             android:textSize="20dp"
             android:textStyle="bold"
+            android:textAlignment="center"
+            android:gravity="center"
+
             />
 
 
-        <ImageView
+        <TextView
             android:id="@+id/image_view2"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
-            android:layout_marginEnd="181dp"
+            android:layout_marginEnd="170dp"
             android:layout_marginLeft="100dp"
-            android:layout_marginRight="181dp"
-            android:layout_marginTop="279dp"
-            android:src="@drawable/box"
-            android:visibility="invisible" />
+            android:layout_marginRight="170dp"
+            android:layout_marginTop="274dp"
+            android:background="@drawable/box"
+            android:singleLine="true"
+            android:textColor="@color/black"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:visibility="invisible"
+            android:textAlignment="center"
+            android:gravity="center"/>
 
-        <ImageView
+        <TextView
             android:id="@+id/image_view3"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
-            android:layout_marginEnd="60dp"
-            android:layout_marginLeft="150dp"
-            android:layout_marginRight="60dp"
-            android:layout_marginTop="282dp"
-            android:src="@drawable/box"
-            android:visibility="invisible" />
+            android:layout_marginEnd="65dp"
+            android:layout_marginLeft="100dp"
+            android:layout_marginRight="65dp"
+            android:layout_marginTop="285dp"
+            android:background="@drawable/box"
+            android:singleLine="true"
+            android:textColor="@color/black"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:visibility="invisible"
+            android:textAlignment="center"
+            android:gravity="center"/>
 
-        <ImageView
+        <TextView
             android:id="@+id/image_view4"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
             android:layout_alignParentTop="true"
             android:layout_marginLeft="84dp"
             android:layout_marginStart="84dp"
             android:layout_marginTop="376dp"
-            android:src="@drawable/box"
-            android:visibility="invisible" />
+            android:visibility="invisible"
+            android:background="@drawable/box"
+            android:singleLine="true"
+            android:textColor="@color/black"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:gravity="center"/>
 
-        <ImageView
+        <TextView
             android:id="@+id/image_view5"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
             android:layout_alignParentTop="true"
             android:layout_marginLeft="190dp"
             android:layout_marginStart="190dp"
             android:layout_marginTop="385dp"
-            android:src="@drawable/box"
-            android:visibility="invisible" />
+            android:visibility="invisible"
+            android:background="@drawable/box"
+            android:singleLine="true"
+            android:textColor="@color/black"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:gravity="center"/>
 
-        <ImageView
+        <TextView
             android:id="@+id/image_view6"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
             android:layout_alignParentTop="true"
             android:layout_marginLeft="300dp"
             android:layout_marginTop="384dp"
-            android:src="@drawable/box"
-            android:visibility="invisible" />
+            android:visibility="invisible"
+            android:background="@drawable/box"
+            android:singleLine="true"
+            android:textColor="@color/black"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:gravity="center"
+            />
 
         <Button
             android:id="@+id/capture_image_btn"

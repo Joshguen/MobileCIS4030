@@ -58,11 +58,11 @@ public class MainActivity extends AppCompatActivity {
 
     Button mCaptureBtn;
     TextView mImageView1;
-    ImageView mImageView2;
-    ImageView mImageView3;
-    ImageView mImageView4;
-    ImageView mImageView5;
-    ImageView mImageView6;
+    TextView mImageView2;
+    TextView mImageView3;
+    TextView mImageView4;
+    TextView mImageView5;
+    TextView mImageView6;
 
 
     Uri image_uri;
@@ -126,22 +126,27 @@ public class MainActivity extends AppCompatActivity {
             switch(i) {
                 case 0:
                     mImageView1.setVisibility(View.VISIBLE);
-                    mImageView1.setText(receiptList.receiptList.get(0).rName);
+                    mImageView1.setText(receiptList.receiptList.get(i).rName);
                     break;
                 case 1:
                     mImageView2.setVisibility(View.VISIBLE);
+                    mImageView2.setText(receiptList.receiptList.get(i).rName);
                     break;
                 case 2:
                     mImageView3.setVisibility(View.VISIBLE);
+                    mImageView3.setText(receiptList.receiptList.get(i).rName);
                     break;
                 case 3:
                     mImageView4.setVisibility(View.VISIBLE);
+                    mImageView4.setText(receiptList.receiptList.get(i).rName);
                     break;
                 case 4:
                     mImageView5.setVisibility(View.VISIBLE);
+                    mImageView5.setText(receiptList.receiptList.get(i).rName);
                     break;
                 case 5:
                     mImageView6.setVisibility(View.VISIBLE);
+                    mImageView6.setText(receiptList.receiptList.get(i).rName);
                     break;
             }
         }
