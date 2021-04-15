@@ -34,7 +34,6 @@ public class ReceiptView extends AppCompatActivity {
     private static final int PERMISSION_CODE = 1000;
     private static final int IMAGE_CAPTURE_CODE = 1001;
     public double runningTot = 0;
-    private int newUserFlag = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,7 +90,6 @@ public class ReceiptView extends AppCompatActivity {
                                             // get user input and add it to list
                                             User toAdd = new User(userInput.getText().toString(), userList.userList.size());
                                             userList.userList.add(toAdd);
-                                            newUserFlag = 1;
                                             finish();
                                             startActivity(getIntent());
                                         }
@@ -146,9 +144,8 @@ public class ReceiptView extends AppCompatActivity {
             }
         });
         dropdown.setAdapter(adapter);
-        if(newUserFlag == 0){
+        if(userList.userList.size() != 0){
             dropdown.setSelection(userList.userList.size()-1);
-            newUserFlag = 0;
         }
 
         ArrayList<String> items = new ArrayList<String>();
@@ -267,7 +264,6 @@ public class ReceiptView extends AppCompatActivity {
         });
 
         doneButton.setOnClickListener(v -> {
-            //TODO
             int flag = 0;
             
             for (int i = 0; i < receipt.getLength(); i++) {
