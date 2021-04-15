@@ -16,6 +16,13 @@ import android.widget.TextView;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.version1.AllReceipts;
+import com.example.version1.AllUsers;
+import com.example.version1.R;
+import com.example.version1.Receipt;
+import com.example.version1.ReceiptItem;
+import com.example.version1.User;
+
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
@@ -60,7 +67,6 @@ public class ReceiptView extends AppCompatActivity {
         //This is the user OnClick
         dropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                System.out.println("Changed");
                 if(parent.getItemAtPosition(position).toString().equals("Add User")) {
                     LayoutInflater li = LayoutInflater.from(context);
                     View promptsView = li.inflate(R.layout.prompts, null);
@@ -100,13 +106,12 @@ public class ReceiptView extends AppCompatActivity {
                     // show it
                     alertDialog.show();
                 }
-                else if (position >= 0) {
+                //on user change
+                else {
                     currentUser[0] = userList.userList.get(position);
-                    System.out.println(currentUser[0].ID);
                     for (int i = 0; i < receipt.getLength(); i++) {
                         boolean checkFlag = false;
                         for (Integer user: receipt.items.get(i).claims) {
-                            System.out.println(user);
                             if (user == currentUser[0].ID) {
                                 checkFlag = true;
                             }
@@ -117,7 +122,20 @@ public class ReceiptView extends AppCompatActivity {
                             listOfReceiptItems.setItemChecked(i, false);
                         }
                     }
-
+                    runningTot = 0;
+                    double netTotal = 0;
+                    for (int i = 0; i < receipt.getLength(); i++) {
+                        netTotal += receipt.items.get(i).price;
+                        if(listOfReceiptItems.isItemChecked(i)){
+                            if (receipt.items.get(i).claims.contains(currentUser[0].ID)) {
+                                runningTot += receipt.items.get(i).price / (receipt.items.get(i).claims.size());
+                            } else {
+                                runningTot += receipt.items.get(i).price / (receipt.items.get(i).claims.size() + 1);
+                            }
+                        }
+                        TextView runningTotal = findViewById(R.id.running_total);
+                        runningTotal.setText("Net Total: $" + df.format(netTotal) + ". Total: $" + df.format(runningTot));
+                    }
                 }
             }
             public void onNothingSelected(AdapterView<?> parent) {
@@ -126,8 +144,6 @@ public class ReceiptView extends AppCompatActivity {
         });
         dropdown.setAdapter(adapter);
 
-        //creating userReceipts
-        Receipt userReceipt = new Receipt(-1);
         ArrayList<String> items = new ArrayList<String>();
         for (ReceiptItem item : receipt.items) {
             String details = item.name + ":  $" + item.price;
@@ -147,7 +163,11 @@ public class ReceiptView extends AppCompatActivity {
                 }
             }
             if(listOfReceiptItems.isItemChecked(i)){
-                runningTot += receipt.items.get(i).price;
+                if (receipt.items.get(i).claims.contains(currentUser[0].ID)) {
+                    runningTot += receipt.items.get(i).price / (receipt.items.get(i).claims.size());
+                } else {
+                    runningTot += receipt.items.get(i).price / (receipt.items.get(i).claims.size() + 1);
+                }
             }
             TextView runningTotal = findViewById(R.id.running_total);
             runningTotal.setText("Net Total: $" + df.format(netTotal) + ". Total: $" + df.format(runningTot));
@@ -157,20 +177,20 @@ public class ReceiptView extends AppCompatActivity {
         listOfReceiptItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                double netTotal = 0;
                 runningTot = 0;
+                double netTotal = 0;
                 for (int i = 0; i < receipt.getLength(); i++) {
                     netTotal += receipt.items.get(i).price;
-                    if (listOfReceiptItems.isItemChecked(i)) {
-                        userReceipt.addItem(receipt.items.get(i));
-                        runningTot += receipt.items.get(i).price / (receipt.items.get(position).claims.size() + 1);
-                    }else{
-                        userReceipt.removeItem(receipt.items.get(i));
+                    if(listOfReceiptItems.isItemChecked(i)){
+                        if (receipt.items.get(i).claims.contains(currentUser[0].ID)) {
+                            runningTot += receipt.items.get(i).price / (receipt.items.get(i).claims.size());
+                        } else {
+                            runningTot += receipt.items.get(i).price / (receipt.items.get(i).claims.size() + 1);
+                        }
                     }
+                    TextView runningTotal = findViewById(R.id.running_total);
+                    runningTotal.setText("Net Total: $" + df.format(netTotal) + ". Total: $" + df.format(runningTot));
                 }
-                //System.out.println(runningTot);
-                TextView runningTotal = findViewById(R.id.running_total);
-                runningTotal.setText("Net Total: $" + df.format(netTotal) + ". Total: $" + df.format(runningTot));
             }
         });
 
@@ -217,6 +237,20 @@ public class ReceiptView extends AppCompatActivity {
 
                 // show it
                 alertDialog.show();
+                runningTot = 0;
+                double netTotal = 0;
+                for (int i = 0; i < receipt.getLength(); i++) {
+                    netTotal += receipt.items.get(i).price;
+                    if(listOfReceiptItems.isItemChecked(i)){
+                        if (receipt.items.get(i).claims.contains(currentUser[0].ID)) {
+                            runningTot += receipt.items.get(i).price / (receipt.items.get(i).claims.size());
+                        } else {
+                            runningTot += receipt.items.get(i).price / (receipt.items.get(i).claims.size() + 1);
+                        }
+                    }
+                    TextView runningTotal = findViewById(R.id.running_total);
+                    runningTotal.setText("Net Total: $" + df.format(netTotal) + ". Total: $" + df.format(runningTot));
+                }
                 return false;
             }
         });
@@ -230,12 +264,14 @@ public class ReceiptView extends AppCompatActivity {
             int flag = 0;
             
             for (int i = 0; i < receipt.getLength(); i++) {
-                if(listOfReceiptItems.isItemChecked(i)){
-                    currentUser[0].claimItem(receipt.items.get(i));
+                //checks if each item is checked and isn't already claimed by that user
+                if(listOfReceiptItems.isItemChecked(i)) {
+                    if (!receipt.items.get(i).claims.contains(currentUser[0].ID)) {
+                        currentUser[0].claimItem(receipt.items.get(i));
+                    }
                 }else{
-                    if(receipt.items.get(i).claims.size()-1 > 0){
+                    if(receipt.items.get(i).claims.size() > 0){
                         currentUser[0].unclaimItem(receipt.items.get(i));
-                        System.out.println("unclaiming " + receipt.items.get(i).claims.size());
                     }
                 }
 
@@ -248,10 +284,8 @@ public class ReceiptView extends AppCompatActivity {
                     receiptList.receiptList.set(i,receipt);
                     flag = 1;
                 }
-                System.out.println(receiptList.receiptList.get(i).ID);
 
             }
-            System.out.println(receipt.ID);
 
             if(flag == 0){
                 receiptList.receiptList.add(receipt);
