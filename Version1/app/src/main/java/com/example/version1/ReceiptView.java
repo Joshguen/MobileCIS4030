@@ -3,6 +3,7 @@ package com.example.version1;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -43,11 +44,16 @@ public class ReceiptView extends AppCompatActivity {
         setContentView(R.layout.receipt_view);
 
         Button doneButton = findViewById(R.id.done_button);
+        EditText nameText = findViewById(R.id.name_text);
 
         TextView babyGotBack = (TextView) findViewById(R.id.back_text);
         ListView listOfReceiptItems = (ListView) findViewById(R.id.receipt);
         final User[] currentUser = {new User("", -1)};
         Receipt receipt = (Receipt) getIntent().getSerializableExtra("receipt");
+        if(!receipt.rName.equals("New Receipt")){
+            nameText.setText(receipt.rName);
+        }
+
 
         //creating the user list and the drop down
         Spinner dropdown = findViewById(R.id.spinner1);
@@ -175,6 +181,7 @@ public class ReceiptView extends AppCompatActivity {
             }
             TextView runningTotal = findViewById(R.id.running_total);
             runningTotal.setText("Net Total: $" + df.format(netTotal) + ". Total: $" + df.format(runningTot));
+
         }
 
         //THis is the receipt onclick
@@ -265,7 +272,12 @@ public class ReceiptView extends AppCompatActivity {
 
         doneButton.setOnClickListener(v -> {
             int flag = 0;
-            
+
+            String name = "New Receipt";
+            name = nameText.getText().toString();
+            System.out.println("Name: " +name);
+            receipt.rName = name;
+
             for (int i = 0; i < receipt.getLength(); i++) {
                 //checks if each item is checked and isn't already claimed by that user
                 if(listOfReceiptItems.isItemChecked(i)) {
@@ -295,5 +307,7 @@ public class ReceiptView extends AppCompatActivity {
             }
             finish();
         });
+
+
     }
 }

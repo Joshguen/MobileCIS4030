@@ -32,6 +32,8 @@ import com.google.firebase.ml.vision.common.FirebaseVisionImage;
 import com.google.firebase.ml.vision.text.FirebaseVisionText;
 import com.google.firebase.ml.vision.text.FirebaseVisionTextRecognizer;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.lang.*;
@@ -57,12 +59,12 @@ public class MainActivity extends AppCompatActivity {
     String allText = "";
 
     Button mCaptureBtn;
-    ImageView mImageView1;
-    ImageView mImageView2;
-    ImageView mImageView3;
-    ImageView mImageView4;
-    ImageView mImageView5;
-    ImageView mImageView6;
+    TextView mImageView1;
+    TextView mImageView2;
+    TextView mImageView3;
+    TextView mImageView4;
+    TextView mImageView5;
+    TextView mImageView6;
 
 
     Uri image_uri;
@@ -126,21 +128,27 @@ public class MainActivity extends AppCompatActivity {
             switch(i) {
                 case 0:
                     mImageView1.setVisibility(View.VISIBLE);
+                    mImageView1.setText(receiptList.receiptList.get(i).rName);
                     break;
                 case 1:
                     mImageView2.setVisibility(View.VISIBLE);
+                    mImageView2.setText(receiptList.receiptList.get(i).rName);
                     break;
                 case 2:
                     mImageView3.setVisibility(View.VISIBLE);
+                    mImageView3.setText(receiptList.receiptList.get(i).rName);
                     break;
                 case 3:
                     mImageView4.setVisibility(View.VISIBLE);
+                    mImageView4.setText(receiptList.receiptList.get(i).rName);
                     break;
                 case 4:
                     mImageView5.setVisibility(View.VISIBLE);
+                    mImageView5.setText(receiptList.receiptList.get(i).rName);
                     break;
                 case 5:
                     mImageView6.setVisibility(View.VISIBLE);
+                    mImageView6.setText(receiptList.receiptList.get(i).rName);
                     break;
             }
         }
@@ -233,6 +241,7 @@ public class MainActivity extends AppCompatActivity {
             task.addOnSuccessListener(new OnSuccessListener<FirebaseVisionText>() {
                 @Override
                 public void onSuccess(FirebaseVisionText firebaseVisionText) {
+                  
                     String s = firebaseVisionText.getText();
                     allText += s;
                     //allText += "0391230safds PENIL PUMP Iguana Iguana DON BUONsecks BILLY'S DOCTOR HMRJb 10.01\nTHIS SHOULD WORK 4.20\n123123123123123LOOLZ MRJ506.69\n";
@@ -275,7 +284,6 @@ public class MainActivity extends AppCompatActivity {
                     AlertDialog.Builder builder = new AlertDialog.Builder(context);
                     builder.setMessage("Is there more to the receipt?").setPositiveButton("Yes", dialogClickListener)
                             .setNegativeButton("No", dialogClickListener).show();
-
 
                 }
             });
@@ -389,6 +397,32 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         return rtn;
+    }
+
+    private void save(String s){
+        String FILE_NAME = "data.txt";
+        FileOutputStream fos = null;
+
+        try {
+            fos = openFileOutput(FILE_NAME, MODE_PRIVATE);
+            fos.write(s.getBytes());
+
+            Toast.makeText(this, "Saved to " + getFilesDir() + "/" + FILE_NAME,
+                    Toast.LENGTH_LONG).show();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (fos != null) {
+                try {
+                    fos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
     }
 
     private void writeToFile(String data,Context context) {
