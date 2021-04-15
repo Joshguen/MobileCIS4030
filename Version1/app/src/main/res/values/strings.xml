@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Version1</string>
+    <string name="app_name">Splitter</string>
     <string name="button_text">Test</string>
     <string name="back_button_text">&lt;</string>
 </resources>

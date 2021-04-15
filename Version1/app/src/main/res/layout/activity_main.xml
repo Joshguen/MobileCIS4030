@@ -7,19 +7,66 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center_horizontal"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    >
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/products_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:background="@color/headerDark"
+        app:layout_collapseMode="pin"
+        app:titleTextColor="@android:color/white">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/splitter_homeicon"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignLeft="@+id/toolbar_title"
+
+                android:layout_alignStart="@+id/toolbar_title"
+                android:layout_marginLeft="-316dp"
+                android:layout_marginStart="-316dp"
+                android:src="@drawable/splitter_icon" />
+
+            <TextView
+                android:id="@+id/toolbar_title"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginEnd="109dp"
+                android:layout_marginRight="109dp"
+                android:fontFamily="serif-monospace"
+                android:gravity="center"
+                android:text="@string/app_name"
+                android:textColor="@android:color/white"
+                android:textSize="40dp"
+                android:textStyle="bold" />
+
+
+        </RelativeLayout>
+
+    </androidx.appcompat.widget.Toolbar>
 
     <RelativeLayout
         android:id="@+id/imagePreview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:padding="0dp" >
+        android:padding="0dp"
+        >
+
 
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/corkyboi" />
+            android:src="@drawable/corkyboi"
+            />
 
         <TextView
             android:id="@+id/image_view1"
@@ -134,8 +181,21 @@
         <Button
             android:id="@+id/capture_image_btn"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="100dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="7dp"
+            android:layout_marginEnd="0dp"
+            android:layout_marginLeft="0dp"
+            android:layout_marginRight="0dp"
+            android:layout_marginStart="0dp"
             android:text="capture image"
+            android:textSize="32dp"
+            android:typeface="monospace"
+            android:background="@color/purple_700"
             />
 
     </RelativeLayout>

@@ -177,6 +177,7 @@ public class ReceiptView extends AppCompatActivity {
             }
             TextView runningTotal = findViewById(R.id.running_total);
             runningTotal.setText("Net Total: $" + df.format(netTotal) + ". Total: $" + df.format(runningTot));
+
         }
 
         //THis is the receipt onclick
